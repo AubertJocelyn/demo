@@ -1,0 +1,3 @@
+class albumdoesnotexist(Exception):
+    pass
+
