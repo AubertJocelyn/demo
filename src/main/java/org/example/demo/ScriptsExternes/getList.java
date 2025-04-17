@@ -1,11 +1,14 @@
-package org.example.demo;
+package org.example.demo.ScriptsExternes;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class getList {
 
     static String cheminDepotGit = System.getProperty("user.dir");;
@@ -50,6 +53,6 @@ public class getList {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(java.util.Arrays.toString(getList.etiquettes("Couleurs")));
+        System.out.println(Arrays.toString(getList.etiquettes("Couleurs")));
     }
 }

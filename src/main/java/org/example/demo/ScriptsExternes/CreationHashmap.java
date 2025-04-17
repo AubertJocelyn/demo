@@ -1,4 +1,4 @@
-package org.example.demo;
+package org.example.demo.ScriptsExternes;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,4 +16,3 @@ public class CreationHashmap {
         return Table;
     }
 }
-
