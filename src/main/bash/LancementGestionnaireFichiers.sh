@@ -1,1 +1,1 @@
-zenity --file-selection
+zenity --file-selection --directory

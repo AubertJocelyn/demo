@@ -21,4 +21,9 @@ class LancementScriptTest {
     void trierAlbum() {
         LancementScript.TrierAlbum("AlbumTest");
     }
+
+    @Test
+    void CreerDossierAlbum() {
+        LancementScript.CreerDossierAlbum("AlbumCree");
+    }
 }
