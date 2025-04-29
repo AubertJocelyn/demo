@@ -79,7 +79,7 @@ def VerifSiJsonExist(path_directory):
 def renvoie_photo(catégorie,etiquette,nom_album):
     files = os.getcwd()
     if nom_album not in files :
-        raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
+        raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas ")
     data = {}
     Img_Correct = []
     with open( + ".json","r") as f :
