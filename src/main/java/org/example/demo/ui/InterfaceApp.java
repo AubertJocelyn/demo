@@ -51,6 +51,7 @@ public class InterfaceApp extends Application {
         //créer la Pane de l'autre moitié de l'interface (où l'utilisateur pourra voir le tri et enregistrer les photos)
 
 
+
         return null;
     }
 
@@ -74,10 +75,11 @@ public class InterfaceApp extends Application {
             @Override
             public void handle(ActionEvent e) {
                 System.out.println("Création nouvel album");
+                get_album_name();
 
+                }
 
-            }
-        });
+            });
         //Ajout des options au menu déroulant
         album.getItems().addAll(nouv_alb);
 
@@ -93,6 +95,7 @@ public class InterfaceApp extends Application {
 		    	System.out.println("album");
 		    }
 		}); */
+
 
 
         option.setOnAction(new EventHandler<ActionEvent>() {
@@ -133,16 +136,18 @@ public class InterfaceApp extends Application {
 
     }
 
-    private String get_album_name() {
+    private void get_album_name() {
         //permet des créer un nouvel album en ouvrant une nouvelle fenêtre pour remplir le nom du nouvel album
         Stage window = new Stage();
 
         final String[] name= {null};
 
-        TextField textfield = new TextField("Nom du nouvel album");
+        TextField textfield = new TextField("Nouvel album");
         Quick_Button validation = new Quick_Button("Valider",Color.ORANGE,Color.WHITE);
         validation.setOnAction(e-> {
             name[0] = textfield.getText();
+            System.out.println(name[0]);
+            //appeler la fonction de Jocelyn avec name[0] en paramètre
             window.close();
 
         });
@@ -160,7 +165,6 @@ public class InterfaceApp extends Application {
         window.setScene(new Scene(root,400,300));
         window.show();
 
-        return name[0];
 
 
     }
