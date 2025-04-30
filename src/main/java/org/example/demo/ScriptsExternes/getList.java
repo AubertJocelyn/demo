@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+// permet d'obtenir la liste de certains éléments sous la forme d'un tableau de chaînes de charactères
+
 public class getList {
 
     static String cheminDepotGit = System.getProperty("user.dir");;
@@ -50,9 +52,5 @@ public class getList {
             }
         }
         return sortie;
-    }
-
-    public static void main(String[] args) throws IOException {
-        System.out.println(Arrays.toString(getList.etiquettes("Couleurs")));
     }
 }
