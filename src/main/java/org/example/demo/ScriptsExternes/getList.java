@@ -32,7 +32,6 @@ public class getList {
     public static String[] categories() throws IOException {
         String chemin = Paths.get(cheminDepotGit, "ListeCategoriesEtEtiquettes.txt").toString();
         BufferedReader lecteur = new BufferedReader(new FileReader(chemin));
-
         String ligne;
         List<String> liste = new ArrayList<>();
         while ((ligne = lecteur.readLine()) != null) {liste.add(ligne.split(" ")[0]);}
