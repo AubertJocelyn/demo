@@ -12,13 +12,16 @@ import javafx.scene.paint.*;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import org.example.demo.ui.EffetsBoutons;
+import org.example.demo.ScriptsExternes.getList;
 
-
+import java.io.IOException;
 
 
 public class InterfaceApp extends Application {
 
-    String[] tri = {"Couleurs", "Date"}; //liste des différentes catégories de tri (à changer pour l'obtenir depuis un fichier txt ou autre)
+    String[] albums = getList.albums(); //liste des noms des albums existants
+
+
 
 
     private Parent first_half_content() {
@@ -34,7 +37,7 @@ public class InterfaceApp extends Application {
             }
         });
 
-        Quick_Pane pane = new Quick_Pane(400,500,Color.WHITE); //création de la pane racine de ce noeud
+        Quick_Pane pane = new Quick_Pane(350,500,Color.WHITE); //création de la pane racine de ce noeud
         pane.setLayout(50,50);
 
         Quick_Pane btn_pane = new Quick_Pane(200,100,null); //création de la pane où sera le bouton importer
@@ -52,8 +55,8 @@ public class InterfaceApp extends Application {
         //créer la Pane de l'autre moitié de l'interface (où l'utilisateur pourra voir le tri et enregistrer les photos)
 
         //création de la pane principale
-        Quick_Pane pane = new Quick_Pane(350,500,Color.DARKGRAY);
-        pane.setLayout(400,50);
+        Quick_Pane pane = new Quick_Pane(350,500,Color.WHITE);
+        pane.setLayout(430,50);
 
         //bouton du choix du tri
         MenuButton menu = new MenuButton("Trier par : ");
@@ -64,7 +67,13 @@ public class InterfaceApp extends Application {
             final int j = i;
             MenuItem item = new MenuItem(categories[i]);
             menu.getItems().add(item);
-            item.setOnAction(e -> {show_all(categories[j]);});
+            item.setOnAction(e -> {
+                try {
+                    show_all(categories[j]);
+                } catch (IOException e2) {
+                    System.out.println(e2.getMessage());
+                }
+            });
         }
 
         menu.setBackground(new Background(new BackgroundFill(Color.ORANGE,new CornerRadii(5), Insets.EMPTY)));
@@ -78,7 +87,17 @@ public class InterfaceApp extends Application {
 
         pane.getChildren().add(choix_tri);
 
+        //création bouton enregistrer tout
+        Quick_Button enregistrer_tout = new Quick_Button("Enregistrer tout", Color.ORANGE, Color.WHITE);
 
+        enregistrer_tout.setOnAction(e -> {
+            System.out.println("Enregistrer tout");
+        });
+
+        Quick_Pane pane_button = new Quick_Pane(200,100,null);
+        pane_button.setLayout(100,5);
+        pane_button.getChildren().add(enregistrer_tout);
+        pane.getChildren().add(pane_button);
 
         return pane;
     }
@@ -91,7 +110,7 @@ public class InterfaceApp extends Application {
 
         //Création des boutons
         //Button album = new Quick_Button("Album",Color.GREY,Color.WHITE);
-        Button option = new Quick_Button("Options", Color.GREY, Color.WHITE);
+
         Button aide = new Quick_Button("Aide", Color.GREY,Color.WHITE);
 
         MenuButton album = new MenuButton("Choix de l'album"); //menu déroulant pour choisir l'album de tri
@@ -102,12 +121,22 @@ public class InterfaceApp extends Application {
         nouv_alb.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.out.println("Création nouvel album");
+                System.out.println("Création nouvel album"); //débug
                 get_album_name();
 
                 }
 
             });
+
+        //Ajout albums existants
+        for (int i=0;i<albums.length;i++) {
+            MenuItem a = new MenuItem(albums[i]);
+            final int j = i;
+            a.setOnAction(e-> {
+                System.out.println(albums[j]);
+            });
+            album.getItems().add(a);
+        }
         //Ajout des options au menu déroulant
         album.getItems().addAll(nouv_alb);
 
@@ -126,13 +155,6 @@ public class InterfaceApp extends Application {
 
 
 
-        option.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                System.out.println("option");
-            }
-        });
-
         aide.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -142,22 +164,18 @@ public class InterfaceApp extends Application {
 
         //Création des panes pour les boutons
         Quick_Pane alb = new Quick_Pane(200,100,null);
-        Quick_Pane opt = new Quick_Pane(200,100,null);
         Quick_Pane aid = new Quick_Pane(200,100,null);
 
         //Association bouton et pane
         alb.getChildren().add(album);
-        opt.getChildren().add(option);
         aid.getChildren().add(aide);
 
         //Position des panes
         alb.setLayout(20,5);
-        opt.setLayout(150,5);
-        aid.setLayout(220,5);
+        aid.setLayout(150,5);
 
         //Association panes sur la barre
         barre.getChildren().add(alb);
-        barre.getChildren().add(opt);
         barre.getChildren().add(aid);
 
         return barre;
@@ -197,15 +215,29 @@ public class InterfaceApp extends Application {
 
     }
 
-    private Pane show_all(String categorie) {
+    private ScrollPane show_all(String categorie) throws IOException {
         //Renvoie tous les panes de show catégory dans un menu déroulant
         System.out.println(categorie);
-        return null;
+        ScrollPane pane = new ScrollPane();
+        String[] etiquettes = getList.etiquettes(categorie);
+        for (int i=0;i< etiquettes.length;i++) {
+            System.out.println(etiquettes[i]);
+            Pane pane1 = show_category(etiquettes[i]);
+            pane1.setLayoutX(pane1.getLayoutX() + 50);
+            pane.getChildrenUnmodifiable().add(pane1);
+        }
+        return pane;
     }
 
     private Pane show_category(String tag) {
         //Renvoie un Pane de toutes les images de la catégorie tag et du bouton pour les enregistrer
-        return null;
+        Quick_Pane pane = new Quick_Pane(430,200,Color.DARKGRAY);
+        pane.setLayout(20,5);
+        TextArea nom_tag = new TextArea(tag);
+
+        pane.getChildren().add(nom_tag);
+
+        return pane;
     }
 
 
@@ -216,6 +248,8 @@ public class InterfaceApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Fenêtre principale de l'application
+
+        String[] tri = getList.categories(); //liste de toutes les catégories de tri
 
         Pane root = new Pane(); 	//pane racine de l'interface
         root.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
