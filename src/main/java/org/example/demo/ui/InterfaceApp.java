@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
 import javafx.scene.control.*;
+import org.example.demo.ui.EffetsBoutons;
 
 
 
@@ -47,12 +48,39 @@ public class InterfaceApp extends Application {
         return pane;
     }
 
-    private Parent display_sort_content() {
+    private Parent display_sort_content(String[] categories) {
         //créer la Pane de l'autre moitié de l'interface (où l'utilisateur pourra voir le tri et enregistrer les photos)
 
+        //création de la pane principale
+        Quick_Pane pane = new Quick_Pane(350,500,Color.DARKGRAY);
+        pane.setLayout(400,50);
+
+        //bouton du choix du tri
+        MenuButton menu = new MenuButton("Trier par : ");
+
+        //ajoute les différentes options de tri
+
+        for (int i=0;i<categories.length;i++) {
+            final int j = i;
+            MenuItem item = new MenuItem(categories[i]);
+            menu.getItems().add(item);
+            item.setOnAction(e -> {show_all(categories[j]);});
+        }
+
+        menu.setBackground(new Background(new BackgroundFill(Color.ORANGE,new CornerRadii(5), Insets.EMPTY)));
+        menu.setTextFill(Color.WHITE);
+
+        //création de la pane pour afficher le bouton
+        Quick_Pane choix_tri = new Quick_Pane(200,100,null);
+        choix_tri.getChildren().add(menu);
+        choix_tri.setLayout(5,5);
 
 
-        return null;
+        pane.getChildren().add(choix_tri);
+
+
+
+        return pane;
     }
 
     private Parent top_bar_content() {
@@ -84,7 +112,7 @@ public class InterfaceApp extends Application {
         album.getItems().addAll(nouv_alb);
 
         //esthétique du bouton d'album
-        album.setBackground(new Background(new BackgroundFill(Color.DARKGRAY,new CornerRadii(5), Insets.EMPTY)));
+        album.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(5), Insets.EMPTY)));
         album.setTextFill(Color.WHITE);
 
         //Définition des actions des boutons
@@ -144,10 +172,10 @@ public class InterfaceApp extends Application {
 
         TextField textfield = new TextField("Nouvel album");
         Quick_Button validation = new Quick_Button("Valider",Color.ORANGE,Color.WHITE);
-        validation.setOnAction(e-> {
+        validation.setOnAction(e-> { //récupère le texte dans le textfield et crée un nouvel album
             name[0] = textfield.getText();
-            System.out.println(name[0]);
-            //appeler la fonction de Jocelyn avec name[0] en paramètre
+            System.out.println(name[0]); //débug
+            EffetsBoutons.CreerAlbum(name[0]);
             window.close();
 
         });
@@ -169,6 +197,12 @@ public class InterfaceApp extends Application {
 
     }
 
+    private Pane show_all(String categorie) {
+        //Renvoie tous les panes de show catégory dans un menu déroulant
+        System.out.println(categorie);
+        return null;
+    }
+
     private Pane show_category(String tag) {
         //Renvoie un Pane de toutes les images de la catégorie tag et du bouton pour les enregistrer
         return null;
@@ -187,6 +221,7 @@ public class InterfaceApp extends Application {
         root.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         root.getChildren().add(first_half_content());
         root.getChildren().add(top_bar_content());
+        root.getChildren().add(display_sort_content(tri));
         primaryStage.setTitle("Logiciel Tri Photos");
         primaryStage.setScene(new Scene(root,800,600));
         primaryStage.show();
