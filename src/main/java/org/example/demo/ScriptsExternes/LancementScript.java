@@ -35,7 +35,8 @@ public class LancementScript {
             // Lire la sortie du processus
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((line = reader.readLine()) != null) {
-                sortie = line; // Afficher la sortie ligne par ligne
+                sortie = line;
+                System.out.println(sortie);// Afficher la sortie ligne par ligne
             }
 
             // Attendre que le processus se termine et obtenir le code de sortie
@@ -79,7 +80,7 @@ public class LancementScript {
 
     public static void TestCreerFichierVide() {
         Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "fichiertxt.sh");
-        LancementScript.main("bash", chemin.toAbsolutePath().toString());
+        System.out.println(LancementScript.main("bash", chemin.toAbsolutePath().toString()));
     }
 }
 
