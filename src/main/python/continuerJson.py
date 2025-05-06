@@ -43,7 +43,7 @@ def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus 
     #if nom_album not in files :
      #   raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
 
-    demo_directory = os.path.dirname(os.path.dirname(os.getcwd()))
+    demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
     chemin = os.path.join(demo_directory,"WorkingDirectory",nom_album)
     chemin_temp = os.path.join(demo_directory,"WorkingDirectory",nom_album,"data_temp.json")
     if not VerifSiJsonExist(chemin) :
