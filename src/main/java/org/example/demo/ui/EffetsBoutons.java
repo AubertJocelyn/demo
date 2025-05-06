@@ -11,13 +11,17 @@ public class EffetsBoutons {
         AjouterPhotosAAlbum(nomAlbum);
     }
 
-    public static void AjouterPhotosAAlbum(String nomAlbum) {
+    public static String AjouterPhotosAAlbum(String nomAlbum) {
         String dossierSource = LancementScript.LancementGestionnaireFichiers();
         System.out.println(dossierSource);
         String dossierDestination = Paths.get(System.getProperty("user.dir"), "WorkingDirectory", nomAlbum, "images").toAbsolutePath().toString();
         System.out.println("dossier destination");
         System.out.println(dossierDestination);
-        LancementScript.CopieDossierSourc_Dest(dossierSource, dossierDestination);
+        return LancementScript.CopieDossierSourc_Dest(dossierSource, dossierDestination);
+    }
+
+    public static void VisualiserPhotosAAlbum(String nomAlbum) {
+
     }
 
 }

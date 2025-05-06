@@ -21,6 +21,7 @@ def verifJson(path):
 
 def verif_possible_ecrire(path):
     try :
+        print("balise", path)
         with open(path,'w') as f:
             f.write("")
             return True
@@ -31,10 +32,10 @@ def verif_possible_ecrire(path):
 def creationJsonAvecAlbum(nom,album): 
     L = {}
     file = nom 
-    files = os.listdir(os.path.join(os.getcwd(),"WorkingDirectory"))
+    files = os.listdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))),"WorkingDirectory"))
     if album not in files :
         raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
-    path = os.path.join(os.path.join(os.getcwd(),"WorkingDirectory"),album, file)
+    path = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))),"WorkingDirectory"),album, file)
     with open(path, "w") as f :
         json.dump(L,f,indent=2)
 
@@ -42,30 +43,31 @@ def creationJsonAvecAlbum(nom,album):
 def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus faire de cd et faire belek aux différents albums
     #if nom_album not in files :
      #   raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
-
     demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
-    chemin = os.path.join(demo_directory,"WorkingDirectory",nom_album)
+    chemin = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images")
+    chemin_json = os.path.join(demo_directory, "WorkingDirectory", nom_album, "data.json")
+    #print("balise", chemin)
     chemin_temp = os.path.join(demo_directory,"WorkingDirectory",nom_album,"data_temp.json")
     if not VerifSiJsonExist(chemin) :
         creationJsonAvecAlbum("data.json",nom_album)
     if image.VerifQueDesIMG(os.path.join(chemin,'images')) :
         files = os.listdir(chemin)
         creationJsonAvecAlbum("data_temp",nom_album)
-        verif_possible_ecrire(chemin)
-        with open(chemin,"r") as f :
+        verif_possible_ecrire(chemin_temp)
+        with open(chemin_json,"r") as f :
             data = json.load(f)
         for img in files:   
             clef = hash(img)
             D_img={"nom" : img}
             D_img["album"]=nom_album
             for catégorie in Dico_etiquette.keys():
-                D_img[catégorie] = tri2.tri_couleur(img) ##fonction de tri pour associer la valeur 
+                D_img[catégorie] = " " ##fonction de tri pour associer la valeur
             data[clef] = D_img
-        with open("data_temp.json","w") as f:
+        with open(chemin_temp,"w") as f:
             json.dump(data,f)
         if verifJson(chemin_temp):
-            os.remove(chemin)
-            os.rename(chemin_temp,chemin)
+            os.remove(chemin_json)
+            os.rename(chemin_temp,chemin_json)
         return True 
     return False
 
