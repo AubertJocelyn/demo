@@ -24,7 +24,6 @@ def verif_possible_ecrire(path):
         with open(path,'w') as f:
             f.write("")
             return True
-            print('bite')
     except PermissionError :
         print("Aucun droit d'écriture sur le fichier")
         return False
@@ -44,10 +43,8 @@ def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus 
     #if nom_album not in files :
      #   raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
 
-    current_directory = os.getcwd()
-    chemin = os.path.join(current_directory,"WorkingDirectory",nom_album)
-    chemin_temp = os.path.join(current_directory,"WorkingDirectory",nom_album,"data_temp.json")
-    if not VerifSiJsonExist(chemin) :
+    chemin_relatif_travail = "demo/WorkingDirectory"
+    if not VerifSiJsonExist(os.path.join(chemin_relatif_travail,nom_album)) :
         creationJsonAvecAlbum("data.json",nom_album)
     if image.VerifQueDesIMG(os.path.join(chemin,'images')) :
         files = os.listdir(chemin)
@@ -104,4 +101,4 @@ def renvoie_photo(catégorie,etiquette,nom_album):
 
 D = { "Couleurs" : ["r","g","b"] }
 
-continuer(os.path.join(os.getcwd(), "WorkingDirectory"),D,"TestNouvelAlbum")
+print(os.path.join("demo","WorkingDirectory","TestNouvelAlbum"))
