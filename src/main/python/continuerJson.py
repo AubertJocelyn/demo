@@ -61,8 +61,9 @@ def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus 
             clef = hash(img)
             D_img={"nom" : img}
             D_img["album"]=nom_album
+            chemin_image = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images",img)
             for catégorie in Dico_etiquette.keys():
-                D_img[catégorie] = " " ##fonction de tri pour associer la valeur
+                D_img[catégorie] = tri2.tri_couleur(Image.open(chemin_image)) ##fonction de tri pour associer la valeur
             data[clef] = D_img
         with open(chemin_temp,"w") as f:
             json.dump(data,f)
