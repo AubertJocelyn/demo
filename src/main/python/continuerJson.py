@@ -43,8 +43,10 @@ def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus 
     #if nom_album not in files :
      #   raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
 
-    chemin_relatif_travail = "demo/WorkingDirectory"
-    if not VerifSiJsonExist(os.path.join(chemin_relatif_travail,nom_album)) :
+    demo_directory = os.path.dirname(os.path.dirname(os.getcwd()))
+    chemin = os.path.join(demo_directory,"WorkingDirectory",nom_album)
+    chemin_temp = os.path.join(demo_directory,"WorkingDirectory",nom_album,"data_temp.json")
+    if not VerifSiJsonExist(chemin) :
         creationJsonAvecAlbum("data.json",nom_album)
     if image.VerifQueDesIMG(os.path.join(chemin,'images')) :
         files = os.listdir(chemin)
@@ -101,4 +103,4 @@ def renvoie_photo(catégorie,etiquette,nom_album):
 
 D = { "Couleurs" : ["r","g","b"] }
 
-print(os.path.join("demo","WorkingDirectory","TestNouvelAlbum"))
+continuer(os.path.join(os.getcwd(), "WorkingDirectory"),D,"TestNouvelAlbum")
