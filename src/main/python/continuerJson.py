@@ -44,6 +44,7 @@ def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus 
     #if nom_album not in files :
      #   raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
     demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+    print("deom_directory", demo_directory)
     chemin = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images")
     chemin_json = os.path.join(demo_directory, "WorkingDirectory", nom_album, "data.json")
     #print("balise", chemin)

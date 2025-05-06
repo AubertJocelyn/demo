@@ -76,6 +76,11 @@ public class LancementScript {
         Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "SupprimerAlbum.sh");
         return LancementScript.main("bash", chemin.toAbsolutePath().toString(), nom);
     }
+
+    public static void TestCreerFichierVide() {
+        Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "fichiertxt.sh");
+        LancementScript.main("bash", chemin.toAbsolutePath().toString());
+    }
 }
 
 
