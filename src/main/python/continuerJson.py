@@ -18,28 +18,41 @@ def verifJson(path):
         print("autre Erreur")
         return False
 
+
+def verif_possible_ecrire(path):
+    try :
+        with open(path,'w') as f:
+            f.write("")
+            return True
+            print('bite')
+    except PermissionError :
+        print("Aucun droit d'écriture sur le fichier")
+        return False
+
 def creationJsonAvecAlbum(nom,album): 
     L = {}
-    file = nom + ".json"
-    files = os.listdir(os.getcwd())
+    file = nom 
+    files = os.listdir(os.path.join(os.getcwd(),"WorkingDirectory"))
     if album not in files :
         raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
-    path = os.path.join(album, file)
+    path = os.path.join(os.path.join(os.getcwd(),"WorkingDirectory"),album, file)
     with open(path, "w") as f :
         json.dump(L,f,indent=2)
 
     
 def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus faire de cd et faire belek aux différents albums
-    if nom_album not in files :
-        raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
+    #if nom_album not in files :
+     #   raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
+
     current_directory = os.getcwd()
-    chemin = os.path.join(current_directory,nom_album,"data.json")
-    chemin_temp = os.path.join(current_directory,nom_album,"data_temp.json")
+    chemin = os.path.join(current_directory,"WorkingDirectory",nom_album)
+    chemin_temp = os.path.join(current_directory,"WorkingDirectory",nom_album,"data_temp.json")
     if not VerifSiJsonExist(chemin) :
         creationJsonAvecAlbum("data.json",nom_album)
-    if image.VerifQueDesIMG(img_path) :
-        files = os.listdir(img_path)
+    if image.VerifQueDesIMG(os.path.join(chemin,'images')) :
+        files = os.listdir(chemin)
         creationJsonAvecAlbum("data_temp",nom_album)
+        verif_possible_ecrire(chemin)
         with open(chemin,"r") as f :
             data = json.load(f)
         for img in files:   
@@ -47,7 +60,7 @@ def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus 
             D_img={"nom" : img}
             D_img["album"]=nom_album
             for catégorie in Dico_etiquette.keys():
-                D_img[catégorie] = None ##fonction de tri pour associer la valeur 
+                D_img[catégorie] = tri2.tri_couleur(img) ##fonction de tri pour associer la valeur 
             data[clef] = D_img
         with open("data_temp.json","w") as f:
             json.dump(data,f)
@@ -82,10 +95,13 @@ def renvoie_photo(catégorie,etiquette,nom_album):
         raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas ")
     data = {}
     Img_Correct = []
-    with open( + ".json","r") as f :
+    with open( "","r") as f :
         data = json.load(f)
     for i in data.keys() :
         if data[i][catégorie] == etiquette and data[i]["album"] == nom_album :
             Img_Correct.append(data[i]["nom"])
     return Img_Correct
 
+D = { "Couleurs" : ["r","g","b"] }
+
+continuer(os.path.join(os.getcwd(), "WorkingDirectory"),D,"TestNouvelAlbum")
