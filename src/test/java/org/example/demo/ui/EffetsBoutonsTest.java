@@ -16,5 +16,6 @@ class EffetsBoutonsTest {
 
     @Test
     void ajouterPhotosAAlbum() {
+        String message = AjouterPhotosAAlbum("LralbumQuiN'existePas");
     }
 }

@@ -11,8 +11,6 @@ import java.util.List;
 
 public class LancementScript {
 
-    public static String racineProjet = System.getProperty("user.dir");
-
     public static String main(String langage, String scriptPath, String... args) {
 
         // Construire la commande complète
@@ -37,17 +35,19 @@ public class LancementScript {
             // Lire la sortie du processus
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((line = reader.readLine()) != null) {
-                sortie = line; // Afficher la sortie ligne par ligne
+                sortie = line;
+                System.out.println(sortie);// Afficher la sortie ligne par ligne
             }
 
             // Attendre que le processus se termine et obtenir le code de sortie
             int exitCode = process.waitFor();
-            System.out.println("Le script s'est terminé avec le code de sortie : " + exitCode);
+            if (exitCode != 0) {return "false";}
+            //System.out.println("Le script s'est terminé avec le code de sortie : " + exitCode);
         } catch (IOException | InterruptedException e) {
             //e.printStackTrace();
         }
-        System.out.println("balise");
-        System.out.println(line);
+        //System.out.println("balise");
+        //System.out.println(line);
         return sortie;
     }
 
@@ -57,15 +57,15 @@ public class LancementScript {
         return LancementScript.main("bash", chemin.toAbsolutePath().toString());
     }
 
-    public static void CopieDossierSourc_Dest(String PathSourc, String PathDest) {
+    public static String CopieDossierSourc_Dest(String PathSourc, String PathDest) {
         //le script bash a été testé dans le terminal
         Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "CopieDossierSourc_Dest.sh");
-        LancementScript.main("bash", chemin.toAbsolutePath().toString(), PathSourc, PathDest);
+        return LancementScript.main("bash", chemin.toAbsolutePath().toString(), PathSourc, PathDest);
     }
 
-    public static void TrierAlbum(String nomAlbum) {
+    public static String TrierAlbum(String nomAlbum) {
         Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "python", "continuerJson.py");
-        LancementScript.main("python3", chemin.toAbsolutePath().toString(), nomAlbum);
+        return LancementScript.main("python3", chemin.toAbsolutePath().toString(), nomAlbum);
     }
 
     public static void CreerDossierAlbum(String nom) {
@@ -73,9 +73,14 @@ public class LancementScript {
         LancementScript.main("bash", chemin.toAbsolutePath().toString(), nom);
     }
 
-    public static void SupprimerAlbum(String nom) {
+    public static String SupprimerAlbum(String nom) {
         Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "SupprimerAlbum.sh");
-        LancementScript.main("bash", chemin.toAbsolutePath().toString(), nom);
+        return LancementScript.main("bash", chemin.toAbsolutePath().toString(), nom);
+    }
+
+    public static void TestCreerFichierVide() {
+        Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "fichiertxt.sh");
+        System.out.println(LancementScript.main("bash", chemin.toAbsolutePath().toString()));
     }
 }
 

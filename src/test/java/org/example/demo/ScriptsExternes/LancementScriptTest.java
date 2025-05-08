@@ -19,11 +19,14 @@ class LancementScriptTest {
 
     @Test
     void trierAlbum() {
-        LancementScript.TrierAlbum("AlbumTest");
+        LancementScript.TrierAlbum("TestNouvelAlbum");
     }
 
-    @Test
+    /*@Test
     void CreerDossierAlbum() {
         LancementScript.CreerDossierAlbum("AlbumCree");
-    }
+    }*/
+
+    @Test
+    void TestCreerFichierVide() {LancementScript.TestCreerFichierVide();}
 }

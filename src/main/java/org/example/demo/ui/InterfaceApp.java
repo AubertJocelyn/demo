@@ -1,6 +1,7 @@
 package org.example.demo.ui;
 
 import javafx.application.*;
+import javafx.geometry.Pos;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.event.ActionEvent;
@@ -11,10 +12,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
 import javafx.scene.control.*;
+import javafx.scene.text.*;
 import org.example.demo.ui.EffetsBoutons;
 import org.example.demo.ScriptsExternes.getList;
 
 import java.io.IOException;
+import java.time.format.TextStyle;
 
 
 public class InterfaceApp extends Application {
@@ -69,7 +72,7 @@ public class InterfaceApp extends Application {
             menu.getItems().add(item);
             item.setOnAction(e -> {
                 try {
-                    show_all(categories[j]);
+                    pane.getChildren().add(show_all(categories[j]));
                 } catch (IOException e2) {
                     System.out.println(e2.getMessage());
                 }
@@ -183,7 +186,7 @@ public class InterfaceApp extends Application {
     }
 
     private void get_album_name() {
-        //permet des créer un nouvel album en ouvrant une nouvelle fenêtre pour remplir le nom du nouvel album
+        //permet de créer un nouvel album en ouvrant une nouvelle fenêtre pour remplir le nom du nouvel album
         Stage window = new Stage();
 
         final String[] name= {null};
@@ -217,26 +220,46 @@ public class InterfaceApp extends Application {
 
     private ScrollPane show_all(String categorie) throws IOException {
         //Renvoie tous les panes de show catégory dans un menu déroulant
-        System.out.println(categorie);
         ScrollPane pane = new ScrollPane();
+        pane.setPrefSize(350,500);
+
         String[] etiquettes = getList.etiquettes(categorie);
-        for (int i=0;i< etiquettes.length;i++) {
-            System.out.println(etiquettes[i]);
+        //Quick_Pane long_pane = new Quick_Pane(350,800,null);
+        VBox long_pane = new VBox();
+
+
+        for (int i=0;i<etiquettes.length;i++) {
             Pane pane1 = show_category(etiquettes[i]);
-            pane1.setLayoutX(pane1.getLayoutX() + 50);
-            pane.getChildrenUnmodifiable().add(pane1);
+            long_pane.getChildren().add(pane1);
+            System.out.println(pane1.getLayoutY());
         }
+
+        pane.setContent(long_pane);
+        pane.setLayoutX(0);
+        pane.setLayoutY(50);
+        pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        long_pane.setSpacing(50);
         return pane;
     }
 
     private Pane show_category(String tag) {
         //Renvoie un Pane de toutes les images de la catégorie tag et du bouton pour les enregistrer
-        Quick_Pane pane = new Quick_Pane(430,200,Color.DARKGRAY);
-        pane.setLayout(20,5);
-        TextArea nom_tag = new TextArea(tag);
-
+        Quick_HBox pane = new Quick_HBox(400,100,Color.DARKGRAY);
+        pane.setLayout(5,0);
+        Text nom_tag = new Text(tag);
+        nom_tag.setFont(Font.font("Verdana", FontWeight.NORMAL, 10));
+        nom_tag.setLayoutX(5);
+        nom_tag.setLayoutY(5);
+        nom_tag.setFill(Color.WHITE);
         pane.getChildren().add(nom_tag);
 
+        Quick_Button enregistrer = new Quick_Button("Enregistrer sous ...", Color.ORANGE,Color.WHITE);
+        enregistrer.setOnAction(e -> {System.out.println("Enregistrer");});
+        pane.getChildren().add(enregistrer);
+        HBox.setMargin(enregistrer,new Insets(5 ,5,5,5));
+        HBox.setMargin(nom_tag,new Insets(5,5,5,5));
+
+        pane.setSpacing(10);
         return pane;
     }
 
