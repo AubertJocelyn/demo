@@ -40,16 +40,21 @@ public class InterfaceApp extends Application {
             }
         });
 
-        Quick_Pane pane = new Quick_Pane(350,500,Color.WHITE); //création de la pane racine de ce noeud
+        Quick_HBox pane = new Quick_HBox(350,500,Color.WHITE); //création de la pane racine de ce noeud
         pane.setLayout(50,50);
 
-        Quick_Pane btn_pane = new Quick_Pane(200,100,null); //création de la pane où sera le bouton importer
+        Quick_HBox btn_pane = new Quick_HBox(200,100,null); //création de la pane où sera le bouton importer
         btn_pane.setLayout(150,400);
         btn_pane.getChildren().add(importer);
 
+        btn_pane.setAlignment(Pos.CENTER);
+        pane.setAlignment(Pos.CENTER_LEFT);
+
+        HBox.setMargin(pane,new Insets(20,20,20,20));
 
 
         pane.getChildren().add(btn_pane);
+        pane.setAlignment(Pos.CENTER_LEFT);
 
         return pane;
     }
@@ -58,9 +63,10 @@ public class InterfaceApp extends Application {
         //créer la Pane de l'autre moitié de l'interface (où l'utilisateur pourra voir le tri et enregistrer les photos)
 
         //création de la pane principale
-        Quick_Pane pane = new Quick_Pane(350,500,Color.WHITE);
-        pane.setLayout(430,50);
 
+        Quick_HBox pane = new Quick_HBox(350,500,Color.WHITE);
+        HBox.setMargin(pane,new Insets(20,20,20,20));
+        pane.setAlignment(Pos.CENTER_RIGHT);
         //bouton du choix du tri
         MenuButton menu = new MenuButton("Trier par : ");
 
@@ -105,7 +111,7 @@ public class InterfaceApp extends Application {
         return pane;
     }
 
-    private Parent top_bar_content() {
+    private HBox top_bar_content() {
         //créer la Pane avec les boutons d'options et de choix de l'album
 
         Quick_HBox barre = new Quick_HBox(800,35,Color.DARKGRAY); //création de la barre où seront les boutons
@@ -281,11 +287,17 @@ public class InterfaceApp extends Application {
 
         String[] tri = getList.categories(); //liste de toutes les catégories de tri
 
-        Pane root = new Pane(); 	//pane racine de l'interface
+        VBox root = new VBox();	//pane racine de l'interface
         root.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-        root.getChildren().add(first_half_content());
-        root.getChildren().add(top_bar_content());
-        root.getChildren().add(display_sort_content(tri));
+        HBox top_bar = top_bar_content();
+        HBox content = new HBox();
+        content.getChildren().add(first_half_content());
+        content.getChildren().add(display_sort_content(tri));
+
+        content.setSpacing(50);
+
+        root.getChildren().addAll(top_bar,content);
+
         primaryStage.setTitle("Logiciel Tri Photos");
         primaryStage.setScene(new Scene(root,800,600));
         primaryStage.show();
