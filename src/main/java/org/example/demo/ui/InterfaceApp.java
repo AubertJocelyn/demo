@@ -23,7 +23,7 @@ import java.time.format.TextStyle;
 public class InterfaceApp extends Application {
 
     String[] albums = getList.albums(); //liste des noms des albums existants
-
+    String current_album = albums[0];
 
 
 
@@ -36,7 +36,7 @@ public class InterfaceApp extends Application {
             @Override
             public void handle(ActionEvent e) {
                 //System.out.println(LancementGestionnaireFichiers.main());
-                System.out.println("importer");
+                EffetsBoutons.AjouterPhotosAAlbum(current_album);
             }
         });
 
@@ -108,8 +108,9 @@ public class InterfaceApp extends Application {
     private Parent top_bar_content() {
         //créer la Pane avec les boutons d'options et de choix de l'album
 
-        Quick_Pane barre = new Quick_Pane(800,35,Color.DARKGRAY); //création de la barre où seront les boutons
+        Quick_HBox barre = new Quick_HBox(800,35,Color.DARKGRAY); //création de la barre où seront les boutons
 
+        barre.setSpacing(1);
 
         //Création des boutons
         //Button album = new Quick_Button("Album",Color.GREY,Color.WHITE);
@@ -124,7 +125,6 @@ public class InterfaceApp extends Application {
         nouv_alb.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.out.println("Création nouvel album"); //débug
                 get_album_name();
 
                 }
@@ -136,7 +136,8 @@ public class InterfaceApp extends Application {
             MenuItem a = new MenuItem(albums[i]);
             final int j = i;
             a.setOnAction(e-> {
-                System.out.println(albums[j]);
+                album.setText("Album : " + albums[j]);
+                current_album = albums[j];
             });
             album.getItems().add(a);
         }
@@ -166,16 +167,18 @@ public class InterfaceApp extends Application {
         });
 
         //Création des panes pour les boutons
-        Quick_Pane alb = new Quick_Pane(200,100,null);
-        Quick_Pane aid = new Quick_Pane(200,100,null);
+        Quick_HBox alb = new Quick_HBox(200,100,null);
+        Quick_HBox aid = new Quick_HBox(200,100,null);
 
+        alb.setAlignment(Pos.CENTER_LEFT);
+        aid.setAlignment(Pos.CENTER_LEFT);
+        HBox.setMargin(alb,new Insets(5,5,5,5));
+        HBox.setMargin(aid,new Insets(5,5,5,5));
         //Association bouton et pane
         alb.getChildren().add(album);
         aid.getChildren().add(aide);
 
-        //Position des panes
-        alb.setLayout(20,5);
-        aid.setLayout(150,5);
+
 
         //Association panes sur la barre
         barre.getChildren().add(alb);
@@ -269,9 +272,8 @@ public class InterfaceApp extends Application {
         return null;
     }
 
-    private Pane show_error() {
+    private void show_error() {
 
-        return null;
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
