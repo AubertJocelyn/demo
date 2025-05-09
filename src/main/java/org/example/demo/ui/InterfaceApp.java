@@ -268,6 +268,11 @@ public class InterfaceApp extends Application {
         //Renvoie un pane de l'image nommée name miniature avec son nom en dessous
         return null;
     }
+
+    private Pane show_error() {
+
+        return null;
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Fenêtre principale de l'application
