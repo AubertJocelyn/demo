@@ -29,4 +29,11 @@ class LancementScriptTest {
 
     @Test
     void TestCreerFichierVide() {LancementScript.TestCreerFichierVide();}
+
+    @Test
+    void AfficherImages() {
+        String cheminImage1 = LancementScript.getCheminImage("AlbumExemple", "blanc.png");
+        String cheminImage2 = LancementScript.getCheminImage("AlbumExemple", "bleu foncer.png");
+        String[] cheminsImages = {cheminImage1, cheminImage2};
+        LancementScript.AfficherImages(cheminsImages);}
 }
