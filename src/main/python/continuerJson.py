@@ -1,7 +1,7 @@
 import json 
 import os 
 import image
-import tri2
+import module_de_tri
 from PIL import Image
 import Erreur
 
@@ -63,7 +63,7 @@ def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus 
             D_img["album"]=nom_album
             chemin_image = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images",img)
             for catégorie in Dico_etiquette.keys():
-                D_img[catégorie] = tri2.tri_couleur(Image.open(chemin_image)) ##fonction de tri pour associer la valeur
+                D_img[catégorie] = module_de_tri.tri_simple.tri_couleur(chemin_image) ##fonction de tri pour associer la valeur, j'ai modifier Image.open(chemin_image) par chemin_image car je le fais et certain trie l'ouvre différemment
             data[clef] = D_img
         with open(chemin_temp,"w") as f:
             json.dump(data,f)
