@@ -51,36 +51,66 @@ public class LancementScript {
         return sortie;
     }
 
+    private static String getCheminScript(String typeLangage, String nomScript) {
+        return Paths.get(System.getProperty("user.dir"), "src", "main", typeLangage, nomScript).toString();
+    }
+
+    private static String getString(String[] strings) {
+        String sortie = "";
+        for (int i = 0; i < strings.length; i++) {
+            sortie = sortie + strings[i] + "§";
+        }
+        System.out.println(sortie);
+        return sortie;
+    }
+
+    public static String getCheminImage(String nomAlbum, String nomImage) {
+        return Paths.get(System.getProperty("user.dir"), "WorkingDirectory", nomAlbum, "images", nomImage).toString();
+    }
+
     public static String LancementGestionnaireFichiers() {
         //Le script bash a été testé dans une version précédente
-        Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "LancementGestionnaireFichiers.sh");
-        return LancementScript.main("bash", chemin.toAbsolutePath().toString());
+        String cheminScript = getCheminScript("bash", "LancementGestionnaireFichiers.sh");
+        return LancementScript.main("bash", cheminScript);
     }
 
     public static String CopieDossierSourc_Dest(String PathSourc, String PathDest) {
         //le script bash a été testé dans le terminal
-        Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "CopieDossierSourc_Dest.sh");
-        return LancementScript.main("bash", chemin.toAbsolutePath().toString(), PathSourc, PathDest);
+        String cheminScript = getCheminScript("bash", "CopieDossierSourc_Dest.sh");
+        return LancementScript.main("bash", cheminScript, PathSourc, PathDest);
     }
 
     public static String TrierAlbum(String nomAlbum) {
-        Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "python", "continuerJson.py");
-        return LancementScript.main("python3", chemin.toAbsolutePath().toString(), nomAlbum);
+        String cheminScript = getCheminScript("python", "continuerJson.py");
+        return LancementScript.main("python3", cheminScript, nomAlbum);
     }
 
-    public static void CreerDossierAlbum(String nom) {
-        Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "CreerDossierAlbum.sh");
-        LancementScript.main("bash", chemin.toAbsolutePath().toString(), nom);
+    public static void CreerDossierAlbum(String nomAlbum) {
+        String cheminScript = getCheminScript("bash", "CreerDossierAlbum.sh");
+        LancementScript.main("bash", cheminScript, nomAlbum);
     }
 
-    public static String SupprimerAlbum(String nom) {
-        Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "SupprimerAlbum.sh");
-        return LancementScript.main("bash", chemin.toAbsolutePath().toString(), nom);
+    public static String SupprimerAlbum(String nomAlbum) {
+        String cheminScript = getCheminScript("bash", "SupprimerAlbum.sh");
+        return LancementScript.main("bash", cheminScript, nomAlbum);
     }
 
     public static void TestCreerFichierVide() {
-        Path chemin = Paths.get(System.getProperty("user.dir"), "src", "main", "bash", "fichiertxt.sh");
-        System.out.println(LancementScript.main("bash", chemin.toAbsolutePath().toString()));
+        String cheminScript = getCheminScript( "python", "fichiertxt.py");
+        System.out.println(LancementScript.main("python3", cheminScript));
+    }
+
+    public static void AfficherImages(String largeur, String hauteur, String x, String y, String[] cheminsImages) {
+        String cheminScript =  getCheminScript( "bash", "AfficherImages.sh");
+        LancementScript.main("bash", cheminScript, largeur, hauteur, x, y, getString(cheminsImages));
+    }
+
+    public static void AfficherImages(String[] cheminsImages) {
+        String largeur = "640";
+        String hauteur = "480";
+        String x = "640";
+        String y = "360";
+        AfficherImages(largeur, hauteur, x, y, cheminsImages);
     }
 }
 
