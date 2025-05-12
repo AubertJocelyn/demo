@@ -14,7 +14,7 @@ import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
 import org.example.demo.ui.EffetsBoutons;
-import org.example.demo.ScriptsExternes.getList;
+import org.example.demo.ScriptsExternes.getTableauDes;
 
 import java.io.IOException;
 import java.time.format.TextStyle;
@@ -22,7 +22,7 @@ import java.time.format.TextStyle;
 
 public class InterfaceApp extends Application {
 
-    String[] albums = getList.albums(); //liste des noms des albums existants
+    String[] albums = getTableauDes.albums(); //liste des noms des albums existants
     String current_album = albums[0];
 
 
@@ -232,7 +232,7 @@ public class InterfaceApp extends Application {
         ScrollPane pane = new ScrollPane();
         pane.setPrefSize(350,500);
 
-        String[] etiquettes = getList.etiquettes(categorie);
+        String[] etiquettes = getTableauDes.etiquettes(categorie);
         //Quick_Pane long_pane = new Quick_Pane(350,800,null);
         VBox long_pane = new VBox();
 
@@ -285,7 +285,7 @@ public class InterfaceApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         //Fenêtre principale de l'application
 
-        String[] tri = getList.categories(); //liste de toutes les catégories de tri
+        String[] tri = getTableauDes.categories(); //liste de toutes les catégories de tri
 
         VBox root = new VBox();	//pane racine de l'interface
         root.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));

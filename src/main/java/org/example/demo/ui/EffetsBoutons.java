@@ -20,8 +20,7 @@ public class EffetsBoutons {
         return LancementScript.CopieDossierSourc_Dest(dossierSource, dossierDestination);
     }
 
-    public static void VisualiserPhotosAAlbum(String nomAlbum) {
-
+    public static void VisualiserImages(String nomAlbum, String[] nomImages) {
+        LancementScript.AfficherImages(nomAlbum, nomImages);
     }
-
 }

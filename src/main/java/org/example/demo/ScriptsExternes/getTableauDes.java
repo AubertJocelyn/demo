@@ -1,17 +1,21 @@
 package org.example.demo.ScriptsExternes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import static org.example.demo.ScriptsExternes.AutresMethodes.getCheminAlbum;
 
 // permet d'obtenir la liste de certains éléments sous la forme d'un tableau de chaînes de charactères
 
-public class getList {
+public class getTableauDes {
 
     static String cheminDepotGit = System.getProperty("user.dir");;
 
@@ -51,5 +55,31 @@ public class getList {
             }
         }
         return sortie;
+    }
+
+
+    public static String[] images(String nomAlbum, String categorie, String etiquette) {
+        List<String> sortie = new ArrayList<>();
+        String cheminJson = Paths.get(getCheminAlbum(nomAlbum), "data.json").toString();
+        JSONParser jsonP = new JSONParser();
+        try {
+            JSONObject jsonO = (JSONObject)jsonP.parse(new FileReader(cheminJson));
+            Set<String> keys = jsonO.keySet();
+            for (String key : keys) {
+                Object o = jsonO.get(key);
+                JSONObject image = (JSONObject) o;
+                if (image.get(categorie).equals(etiquette)) {
+                    Object o1 = image.get("nom");
+                    String nom = (String) o1;
+                    sortie.add(nom);
+                }
+            }
+
+
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } catch (ParseException e) {
+        };
+        return sortie.toArray(new String[0]);
     }
 }

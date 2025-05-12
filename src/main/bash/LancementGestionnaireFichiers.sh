@@ -1,1 +1,1 @@
-zenity --file-selection --directory
+zenity --file-selection --filename=$1 --directory

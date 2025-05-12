@@ -1,1 +1,1 @@
-rm -r ./WorkingDirectory/$1
+rm -r $1
