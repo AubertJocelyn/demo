@@ -40,10 +40,10 @@ public class InterfaceApp extends Application {
             }
         });
 
-        Quick_HBox pane = new Quick_HBox(350,500,Color.WHITE); //création de la pane racine de ce noeud
+        Quick_VBox pane = new Quick_VBox(350,500,Color.WHITE); //création de la pane racine de ce noeud
         pane.setLayout(50,50);
 
-        Quick_HBox btn_pane = new Quick_HBox(200,100,null); //création de la pane où sera le bouton importer
+        Quick_VBox btn_pane = new Quick_VBox(200,100,null); //création de la pane où sera le bouton importer
         btn_pane.setLayout(150,400);
         btn_pane.getChildren().add(importer);
 
@@ -274,7 +274,7 @@ public class InterfaceApp extends Application {
 
 
     private Pane show_image(String name) {
-        //Renvoie un pane de l'image nommée name miniature avec son nom en dessous
+        //Renvoie un bouton du nom de l'image, qui l'affiche si on clique dessus
         return null;
     }
 
