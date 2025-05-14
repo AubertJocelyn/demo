@@ -23,11 +23,11 @@ import java.time.format.TextStyle;
 public class InterfaceApp extends Application {
 
     String[] albums = getTableauDes.albums(); //liste des noms des albums existants
-    String current_album = albums[0];
+    String current_album = null;
 
 
 
-    private Parent first_half_content() {
+    /*private Parent first_half_content() {
         //créer la Pane de la moitié de l'interface (où l'utilisateur pourra importer son dossier de photos)
 
         Button importer = new Quick_Button("Importer", Color.ORANGE, Color.WHITE);
@@ -57,18 +57,21 @@ public class InterfaceApp extends Application {
         pane.setAlignment(Pos.CENTER_LEFT);
 
         return pane;
-    }
+    }*/ //méthode remplacée par le bouton importer de la barre en haut
 
     private Parent display_sort_content(String[] categories) {
         //créer la Pane de l'autre moitié de l'interface (où l'utilisateur pourra voir le tri et enregistrer les photos)
 
         //création de la pane principale
 
-        Quick_HBox pane = new Quick_HBox(350,500,Color.WHITE);
+
+        BorderPane pane = new BorderPane();
+        pane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         HBox.setMargin(pane,new Insets(20,20,20,20));
-        pane.setAlignment(Pos.CENTER_RIGHT);
         //bouton du choix du tri
         MenuButton menu = new MenuButton("Trier par : ");
+
+
 
         //ajoute les différentes options de tri
 
@@ -78,35 +81,41 @@ public class InterfaceApp extends Application {
             menu.getItems().add(item);
             item.setOnAction(e -> {
                 try {
-                    pane.getChildren().add(show_all(categories[j]));
+                    pane.setCenter(null);
+                    pane.setCenter(show_all(categories[j]));
                 } catch (IOException e2) {
                     System.out.println(e2.getMessage());
+                    
                 }
+
             });
         }
 
-        menu.setBackground(new Background(new BackgroundFill(Color.ORANGE,new CornerRadii(5), Insets.EMPTY)));
+        menu.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,new CornerRadii(5), Insets.EMPTY)));
         menu.setTextFill(Color.WHITE);
 
-        //création de la pane pour afficher le bouton
-        Quick_Pane choix_tri = new Quick_Pane(200,100,null);
-        choix_tri.getChildren().add(menu);
-        choix_tri.setLayout(5,5);
 
 
-        pane.getChildren().add(choix_tri);
+
+
 
         //création bouton enregistrer tout
-        Quick_Button enregistrer_tout = new Quick_Button("Enregistrer tout", Color.ORANGE, Color.WHITE);
+        Quick_Button enregistrer_tout = new Quick_Button("Enregistrer tout", Color.LIGHTGRAY, Color.WHITE);
 
         enregistrer_tout.setOnAction(e -> {
-            System.out.println("Enregistrer tout");
+            if (current_album != null) {
+                System.out.println("Enregistrer tout");
+            }
+
         });
 
-        Quick_Pane pane_button = new Quick_Pane(200,100,null);
-        pane_button.setLayout(100,5);
-        pane_button.getChildren().add(enregistrer_tout);
-        pane.getChildren().add(pane_button);
+
+        HBox btns = new HBox();
+        btns.setSpacing(10);
+        btns.getChildren().addAll(menu,enregistrer_tout);
+        pane.setTop(btns);
+
+        BorderPane.setMargin(btns,new Insets(5,5,5,5));
 
         return pane;
     }
@@ -116,10 +125,25 @@ public class InterfaceApp extends Application {
 
         Quick_HBox barre = new Quick_HBox(800,35,Color.DARKGRAY); //création de la barre où seront les boutons
 
+
         barre.setSpacing(1);
 
         //Création des boutons
         //Button album = new Quick_Button("Album",Color.GREY,Color.WHITE);
+
+        Button importer = new Quick_Button("Importer", Color.LIGHTGRAY, Color.GRAY);
+
+        importer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (current_album != null) {
+                    //System.out.println(LancementGestionnaireFichiers.main());
+                    EffetsBoutons.AjouterPhotosAAlbum(current_album);
+                }
+            }
+        });
+
+
 
         Button aide = new Quick_Button("Aide", Color.GREY,Color.WHITE);
 
@@ -137,18 +161,6 @@ public class InterfaceApp extends Application {
 
             });
 
-        //Ajout albums existants
-        for (int i=0;i<albums.length;i++) {
-            MenuItem a = new MenuItem(albums[i]);
-            final int j = i;
-            a.setOnAction(e-> {
-                album.setText("Album : " + albums[j]);
-                current_album = albums[j];
-            });
-            album.getItems().add(a);
-        }
-        //Ajout des options au menu déroulant
-        album.getItems().addAll(nouv_alb);
 
         //esthétique du bouton d'album
         album.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(5), Insets.EMPTY)));
@@ -168,27 +180,41 @@ public class InterfaceApp extends Application {
         aide.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.out.println("aide");
+                aide();
             }
         });
 
-        //Création des panes pour les boutons
-        Quick_HBox alb = new Quick_HBox(200,100,null);
-        Quick_HBox aid = new Quick_HBox(200,100,null);
 
-        alb.setAlignment(Pos.CENTER_LEFT);
-        aid.setAlignment(Pos.CENTER_LEFT);
-        HBox.setMargin(alb,new Insets(5,5,5,5));
-        HBox.setMargin(aid,new Insets(5,5,5,5));
-        //Association bouton et pane
-        alb.getChildren().add(album);
-        aid.getChildren().add(aide);
+
+        album.setAlignment(Pos.CENTER_LEFT);
+        aide.setAlignment(Pos.CENTER_LEFT);
+        importer.setAlignment(Pos.CENTER_LEFT);
+        HBox.setMargin(importer,new Insets(5,5,5,5));
+        HBox.setMargin(album,new Insets(5,5,5,5));
+        HBox.setMargin(aide,new Insets(5,5,5,5));
 
 
 
         //Association panes sur la barre
-        barre.getChildren().add(alb);
-        barre.getChildren().add(aid);
+        barre.getChildren().add(importer);
+        barre.getChildren().add(album);
+        barre.getChildren().add(aide);
+        barre.setSpacing(5);
+
+        //Ajout albums existants
+        for (int i=0;i<albums.length;i++) {
+            MenuItem a = new MenuItem(albums[i]);
+            final int j = i;
+            a.setOnAction(e-> {
+                album.setText("Album : " + albums[j]);
+                current_album = albums[j];
+                importer.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                importer.setTextFill(Color.WHITE);
+            });
+            album.getItems().add(a);
+        }
+        //Ajout des options au menu déroulant
+        album.getItems().addAll(nouv_alb);
 
         return barre;
 
@@ -231,7 +257,7 @@ public class InterfaceApp extends Application {
         //Renvoie tous les panes de show catégory dans un menu déroulant
         ScrollPane pane = new ScrollPane();
         pane.setPrefSize(350,500);
-
+        pane.setLayoutX(10);
         String[] etiquettes = getTableauDes.etiquettes(categorie);
         //Quick_Pane long_pane = new Quick_Pane(350,800,null);
         VBox long_pane = new VBox();
@@ -240,7 +266,6 @@ public class InterfaceApp extends Application {
         for (int i=0;i<etiquettes.length;i++) {
             Pane pane1 = show_category(etiquettes[i]);
             long_pane.getChildren().add(pane1);
-            System.out.println(pane1.getLayoutY());
         }
 
         pane.setContent(long_pane);
@@ -281,22 +306,45 @@ public class InterfaceApp extends Application {
     private void show_error() {
 
     }
+
+    private void aide(){
+        Stage window = new Stage();
+        Quick_VBox root = new Quick_VBox(500,100,Color.LIGHTGRAY);
+        Text text1 = new Text("Pour commencer, choisissez ou créez un album.");
+        Text text2 = new Text("Dans cet album, importez les photos à trier (sélectionnez un dossier de photos) puis" +
+                " choisissez le critère de tri.");
+        Quick_Button ok = new Quick_Button("Ok",Color.ORANGE,Color.WHITE);
+        ok.setOnAction(e -> {window.close();});
+
+        text1.setFont(Font.font("Verdana", FontWeight.NORMAL, 10));
+        text2.setFont(Font.font("Verdana", FontWeight.NORMAL, 10));
+        text1.setTextAlignment(TextAlignment.CENTER);
+        text2.setTextAlignment(TextAlignment.CENTER);
+
+        ok.setAlignment(Pos.BOTTOM_CENTER);
+
+        VBox.setMargin(ok,new Insets(20,20,10,20));
+        VBox.setMargin(text2,new Insets(5,5,5,5));
+        VBox.setMargin(text1,new Insets(5,5,5,5));
+        root.getChildren().addAll(text1,text2,ok);
+        window.setTitle("Aide");
+        window.setScene(new Scene(root,600,100));
+        window.show();
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Fenêtre principale de l'application
 
         String[] tri = getTableauDes.categories(); //liste de toutes les catégories de tri
 
-        VBox root = new VBox();	//pane racine de l'interface
+        BorderPane root = new BorderPane();
         root.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         HBox top_bar = top_bar_content();
-        HBox content = new HBox();
-        content.getChildren().add(first_half_content());
-        content.getChildren().add(display_sort_content(tri));
+        root.setTop(top_bar);
+        Parent content = display_sort_content(tri);
 
-        content.setSpacing(50);
-
-        root.getChildren().addAll(top_bar,content);
+        BorderPane.setMargin(content,new Insets(20,20,20,20));
+        root.setCenter(content);
 
         primaryStage.setTitle("Logiciel Tri Photos");
         primaryStage.setScene(new Scene(root,800,600));
