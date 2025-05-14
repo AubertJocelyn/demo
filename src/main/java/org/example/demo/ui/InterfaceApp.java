@@ -71,6 +71,9 @@ public class InterfaceApp extends Application {
         //bouton du choix du tri
         MenuButton menu = new MenuButton("Trier par : ");
 
+        //création bouton enregistrer tout
+        Quick_Button enregistrer_tout = new Quick_Button("Enregistrer tout", Color.LIGHTGRAY, Color.WHITE);
+
 
 
         //ajoute les différentes options de tri
@@ -80,18 +83,21 @@ public class InterfaceApp extends Application {
             MenuItem item = new MenuItem(categories[i]);
             menu.getItems().add(item);
             item.setOnAction(e -> {
+                if (current_album != null) {
+                    enregistrer_tout.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
                 try {
                     pane.setCenter(null);
                     pane.setCenter(show_all(categories[j]));
                 } catch (IOException e2) {
                     System.out.println(e2.getMessage());
-                    
+
                 }
 
             });
         }
 
-        menu.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,new CornerRadii(5), Insets.EMPTY)));
+        menu.setBackground(new Background(new BackgroundFill(Color.ORANGE,new CornerRadii(5), Insets.EMPTY)));
         menu.setTextFill(Color.WHITE);
 
 
@@ -99,8 +105,6 @@ public class InterfaceApp extends Application {
 
 
 
-        //création bouton enregistrer tout
-        Quick_Button enregistrer_tout = new Quick_Button("Enregistrer tout", Color.LIGHTGRAY, Color.WHITE);
 
         enregistrer_tout.setOnAction(e -> {
             if (current_album != null) {
@@ -264,7 +268,7 @@ public class InterfaceApp extends Application {
 
 
         for (int i=0;i<etiquettes.length;i++) {
-            Pane pane1 = show_category(etiquettes[i]);
+            Pane pane1 = show_category(etiquettes[i],categorie);
             long_pane.getChildren().add(pane1);
         }
 
@@ -276,35 +280,73 @@ public class InterfaceApp extends Application {
         return pane;
     }
 
-    private Pane show_category(String tag) {
+    private Pane show_category(String tag,String categorie) {
         //Renvoie un Pane de toutes les images de la catégorie tag et du bouton pour les enregistrer
-        Quick_HBox pane = new Quick_HBox(400,100,Color.DARKGRAY);
-        pane.setLayout(5,0);
+        BorderPane pane = new BorderPane();
+        pane.setLayoutX(5);
+        pane.setPrefSize(1200,200);
+        pane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+
+        HBox top = new HBox();
+
         Text nom_tag = new Text(tag);
-        nom_tag.setFont(Font.font("Verdana", FontWeight.NORMAL, 10));
-        nom_tag.setLayoutX(5);
-        nom_tag.setLayoutY(5);
-        nom_tag.setFill(Color.WHITE);
-        pane.getChildren().add(nom_tag);
+        nom_tag.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+        nom_tag.setFill(Color.GRAY);
+
 
         Quick_Button enregistrer = new Quick_Button("Enregistrer sous ...", Color.ORANGE,Color.WHITE);
         enregistrer.setOnAction(e -> {System.out.println("Enregistrer");});
-        pane.getChildren().add(enregistrer);
+
+
         HBox.setMargin(enregistrer,new Insets(5 ,5,5,5));
         HBox.setMargin(nom_tag,new Insets(5,5,5,5));
 
-        pane.setSpacing(10);
+        nom_tag.setTextAlignment(TextAlignment.CENTER);
+        top.getChildren().addAll(nom_tag,enregistrer);
+        pane.setTop(top);
+
+        if (current_album != null) {
+            String[] images = getTableauDes.images(current_album,categorie,tag);
+            Quick_Button visu = new Quick_Button("Voir images", Color.ORANGE, Color.WHITE);
+            visu.setOnAction(e -> {EffetsBoutons.VisualiserImages(current_album,images);});
+            HBox.setMargin(visu,new Insets(5,5,5,5));
+            top.getChildren().add(visu);
+            for (int i=0;i<images.length;i++) {
+                pane.setCenter(show_image(images[i]));
+            }
+
+        }
+
         return pane;
     }
 
 
-    private Pane show_image(String name) {
-        //Renvoie un bouton du nom de l'image, qui l'affiche si on clique dessus
-        return null;
+    private Pane show_image(String image) {
+        HBox ima = new HBox();
+        Text im = new Text(image);
+        im.setFont(Font.font("Verdana", FontWeight.NORMAL, 10));
+        im.setFill(Color.WHITE);
+        return ima;
     }
 
     private void show_error() {
+        Stage window = new Stage();
+        Quick_VBox root = new Quick_VBox(500,100,Color.LIGHTGRAY);
+        Text text1 = new Text("Une erreur s'est produite");
+        Quick_Button ok = new Quick_Button("OK",Color.ORANGE,Color.WHITE);
+        ok.setOnAction(e -> {window.close();});
 
+        text1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+
+        text1.setTextAlignment(TextAlignment.CENTER);
+        ok.setAlignment(Pos.BOTTOM_CENTER);
+
+        VBox.setMargin(ok,new Insets(20,20,10,20));
+
+        root.getChildren().addAll(text1,ok);
+        window.setTitle("Erreur");
+        window.setScene(new Scene(root,600,100));
+        window.show();
     }
 
     private void aide(){
@@ -313,7 +355,7 @@ public class InterfaceApp extends Application {
         Text text1 = new Text("Pour commencer, choisissez ou créez un album.");
         Text text2 = new Text("Dans cet album, importez les photos à trier (sélectionnez un dossier de photos) puis" +
                 " choisissez le critère de tri.");
-        Quick_Button ok = new Quick_Button("Ok",Color.ORANGE,Color.WHITE);
+        Quick_Button ok = new Quick_Button("OK",Color.ORANGE,Color.WHITE);
         ok.setOnAction(e -> {window.close();});
 
         text1.setFont(Font.font("Verdana", FontWeight.NORMAL, 10));
