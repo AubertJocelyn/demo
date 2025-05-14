@@ -2,6 +2,7 @@ package org.example.demo.ScriptsExternes;
 
 import org.junit.jupiter.api.Test;
 
+import static org.example.demo.ScriptsExternes.AutresMethodes.getCheminImage;
 import static org.junit.jupiter.api.Assertions.*;
 class LancementScriptTest {
 
@@ -32,8 +33,6 @@ class LancementScriptTest {
 
     @Test
     void AfficherImages() {
-        String cheminImage1 = LancementScript.getCheminImage("AlbumExemple", "blanc.png");
-        String cheminImage2 = LancementScript.getCheminImage("AlbumExemple", "bleu foncer.png");
-        String[] cheminsImages = {cheminImage1, cheminImage2};
-        LancementScript.AfficherImages(cheminsImages);}
+        String[] nomsImages = {"blanc.png", "bleu foncer.png"};
+        LancementScript.AfficherImages("TestNouvelAlbum", nomsImages);}
 }

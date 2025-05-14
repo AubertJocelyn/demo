@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.example.demo.ScriptsExternes.AutresMethodes.getCheminAlbum;
+import static org.example.demo.ScriptsExternes.AutresMethodes.getCheminImage;
+
 public class LancementScript {
 
     public static String main(String langage, String scriptPath, String... args) {
@@ -64,14 +67,11 @@ public class LancementScript {
         return sortie;
     }
 
-    public static String getCheminImage(String nomAlbum, String nomImage) {
-        return Paths.get(System.getProperty("user.dir"), "WorkingDirectory", nomAlbum, "images", nomImage).toString();
-    }
-
     public static String LancementGestionnaireFichiers() {
         //Le script bash a été testé dans une version précédente
         String cheminScript = getCheminScript("bash", "LancementGestionnaireFichiers.sh");
-        return LancementScript.main("bash", cheminScript);
+        String cheminDepartGestionnaire = Paths.get(System.getProperty("user.dir")).toString();
+        return LancementScript.main("bash", cheminScript, cheminDepartGestionnaire);
     }
 
     public static String CopieDossierSourc_Dest(String PathSourc, String PathDest) {
@@ -92,7 +92,8 @@ public class LancementScript {
 
     public static String SupprimerAlbum(String nomAlbum) {
         String cheminScript = getCheminScript("bash", "SupprimerAlbum.sh");
-        return LancementScript.main("bash", cheminScript, nomAlbum);
+        String cheminAlbum = getCheminAlbum(nomAlbum);
+        return LancementScript.main("bash", cheminScript, cheminAlbum);
     }
 
     public static void TestCreerFichierVide() {
@@ -100,17 +101,17 @@ public class LancementScript {
         System.out.println(LancementScript.main("python3", cheminScript));
     }
 
-    public static void AfficherImages(String largeur, String hauteur, String x, String y, String[] cheminsImages) {
+    public static void AfficherImages(String largeur, String hauteur, String x, String y, String nomAlbum, String[] nomsImages) {
         String cheminScript =  getCheminScript( "bash", "AfficherImages.sh");
-        LancementScript.main("bash", cheminScript, largeur, hauteur, x, y, getString(cheminsImages));
+        LancementScript.main("bash", cheminScript, largeur, hauteur, x, y, getString(getCheminImage(nomAlbum, nomsImages)));
     }
 
-    public static void AfficherImages(String[] cheminsImages) {
+    public static void AfficherImages(String nomAlbum, String[] nomsImages) {
         String largeur = "640";
         String hauteur = "480";
         String x = "640";
         String y = "360";
-        AfficherImages(largeur, hauteur, x, y, cheminsImages);
+        AfficherImages(largeur, hauteur, x, y, nomAlbum, nomsImages);
     }
 }
 
