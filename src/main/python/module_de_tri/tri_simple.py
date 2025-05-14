@@ -4,7 +4,7 @@ from PIL.ExifTags import TAGS
 import numpy as np
 import exifread
 
-mois=[janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre]
+mois=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]
 fuseau_horaire={
     -12: "Etc/GMT+12",
     -11: "Pacific:_Pago_Pago_Niue Midway",
