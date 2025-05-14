@@ -4,7 +4,7 @@ from PIL.ExifTags import TAGS
 import numpy as np
 import exifread
 
-
+mois=[janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre]
 fuseau_horaire={
     -12: "Etc/GMT+12",
     -11: "Pacific:_Pago_Pago_Niue Midway",
@@ -58,11 +58,21 @@ def tri_date_année(image_filename):
         return date.split(":")[0]
     return "Sans date"
 
+def tri_appareil(nom):
+    image = Image.open(nom)
+    mar = metadonnees(image).get('Make')
+    mol = metadonnees(image).get('Model')
+    if mar:
+        if mol:
+            return (mar+ "_"+ mol)
+        return mar
+    return "Sans model"
+
 def tri_date_mois (nom):
     image = Image.open(nom)
     date = metadonnees(image).get('DateTime')
     if date:
-        return date.split(":")[1]
+        return mois[date.split(":")[1]+1]
     return "Sans date"
 
 def tri_heure (nom):
@@ -127,7 +137,6 @@ def get_gps_info(image_filename):
          tags = exifread.process_file(f)
     gps_info = {tag: tags[tag] for tag in tags.keys() if tag.startswith('GPS')}
     return str(gps_info.get('GPS GPSTimeStamp'))
-
 
 # ## fonction annexe (pas utile si tu veux uniquement les etiquettes pour une photo)
 
