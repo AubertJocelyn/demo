@@ -1,9 +1,10 @@
-
+# librairie utiles
 from PIL import Image
 from PIL.ExifTags import TAGS
 import numpy as np
 import exifread
 
+#variable utiles notamment pour tri_date_mois(), decalage_utc()
 mois=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]
 fuseau_horaire={
     -12: "Etc/GMT+12",
@@ -16,10 +17,10 @@ fuseau_horaire={
     -5: "America:_New_York_Toronto_Bogota",
     -4: "America:_Halifax_Caracas_Santiago",
     -3: "America: Argentina Sao_Paulo Montevideo",
-    -2: "America: Noronha Atlantic: South_Georgia",
-    -1: "Atlantic: Azores Cape_Verde",
-    0: "Europe: London Africa: Abidjan Atlantic: Reykjavik",
-    1: "Europe: Paris Berlin Africa: Lagos",
+    -2: "America:_Noronha_Atlantic:_South_Georgia",
+    -1: "Atlantic:_Azores_Cape_Verde",
+    0: "Europe:_London_Africa:_Abidjan_Atlantic:_Reykjavik",
+    1: "Europe:_Paris_Berlin_Africa:_Lagos",
     2: "Europe: Athens Helsinki Africa: Cairo",
     3: "Europe: Moscow Africa: Nairobi Asia: Riyadh",
     4: "Asia: Dubai Baku Europe: Samara",
@@ -34,7 +35,7 @@ fuseau_horaire={
     13: "Pacific: Tongatapu Apia",
     14: "Pacific: Kiritimati"
 }
-## fonction pour le tri par date
+## fonction pour les tris
 
 # Récupère les métadonnées EXIF d'une image
 def metadonnees(my_image):
@@ -52,21 +53,22 @@ def metadonnees(my_image):
     return L
 
 # Tri par année à partir de la date EXIF
-def tri_date_année(image_filename):
+def tri_date_annee(image_filename):
     date = metadonnees(image_filename).get('DateTime')
-    if date:
+    if date:  #test si données existe dans EXIF
         return date.split(":")[0]
     return "Sans date"
 
+#Tri par nom_appareil à partir des données EXIF
 def tri_appareil(nom):
     image = Image.open(nom)
     mar = metadonnees(image).get('Make')
     mol = metadonnees(image).get('Model')
-    if mar:
-        if mol:
+    if mar:     #test si données existe dans EXIF
+        if mol:  #test si données existe dans EXIF
             return (mar+ "_"+ mol)
         return mar
-    return "Sans model"
+    return "Sans modele"
 
 def tri_date_mois (nom):
     image = Image.open(nom)
@@ -75,6 +77,7 @@ def tri_date_mois (nom):
         return mois[date.split(":")[1]+1]
     return "Sans date"
 
+# Tri par heure à partir de la date EXIF
 def tri_heure (nom):
     image = Image.open(nom)
     date = metadonnees(image).get('DateTime')
@@ -83,6 +86,7 @@ def tri_heure (nom):
 
     return "Sans date"
 
+# Tri par distinction jour/nuit, il regarde l'heure (jour compris entre 7h et 20h) à partir de la date EXIF
 def tri_jour_nuit (nom):
     image = Image.open(nom)
     date = metadonnees(image).get('DateTime')
@@ -95,12 +99,12 @@ def tri_jour_nuit (nom):
 
 
 
-# Tri par couleur (R=0, B=1, V=2)
+# Tri par couleur (R=0, B=1, V=2) somme tous les pixel et fais la moyenne renvoit toute ces couleurs: rouge vert bleu blanc jaune noir cyan magenta
 def tri_couleur(nom):
     image = Image.open(nom)
     a = np.sum(np.array(image), axis=(0, 1))  # Somme par canal R, G, B
-    a=[int(i/(len(np.array(image))*len(np.array(image)[0]))) for i in a]
-    if a[0]>122:
+    a=[int(i/(len(np.array(image))*len(np.array(image)[0]))) for i in a] #moyenne
+    if a[0]>122: #les différents test successif pour renvoyer la bonne couleur
         if a[1]>122:
             if a[2]>122:
                 return("blanc")
@@ -116,17 +120,19 @@ def tri_couleur(nom):
         return("bleu")
     return("noir")
 
+# Tri par localisation à partir de la date utc: compare, l'heure local et utc pour definir le fuseau horaire corespondant, prend uniquement les décalages entier ignore les demis comme pour l'inde.
+# le dictionnaire définit dans les variable fait le lien entre le fuseau horaire et la localisation
 def decalage_utc(nom):
     image = Image.open(nom)
     date = metadonnees(image).get('DateTime')
     if date:
         utc=get_gps_info(nom)
         if utc:
-            heure= int(date.split(" ")[1].split(":")[0])
+            heure= int(date.split(" ")[1].split(":")[0]) #comme donnees en "str", utilasation de split pour récuperer le nombre correspondant à l'heure il faudrait s'assuré que ces toujours la meme typologie
             heure_utc=int(utc.split("[")[1].split(",")[0])
             decalage = int(heure -heure_utc)
             if -13 < decalage < 15 :
-                    return fuseau_horaire.get(decalage)
+                    return fuseau_horaire.get(decalage)# utilisation du dictionnaire
     return "Sans date"
 
 # ## fonction pour le tri par localisation (à finir)
