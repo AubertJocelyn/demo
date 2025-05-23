@@ -1,6 +1,6 @@
 # librairie utiles
 import os
-import annexe as anx
+from . import annexe as anx
 from PIL import Image
 from PIL.ExifTags import TAGS
 import numpy as np

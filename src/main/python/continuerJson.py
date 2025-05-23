@@ -41,9 +41,7 @@ def creationJsonAvecAlbum(nom,album):
     with open(path, "w") as f :
         json.dump(L,f,indent=2)
 
-# les différents tris il y a dans tri_simple: tri_date_annee() ,  tri_appareil(), tri_date_mois(), tri_heure (), tri_jour_nuit () , tri_couleur(), decalage_utc().
-# dans tri_opencv: tri_presence_visage()
-# tous les tris prennent en entrée le chemin de l'image et return en "str"
+
 def continuer(nom_album):
 
     demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
@@ -145,3 +143,5 @@ def main():
     continuer(argument1)
 
 main()
+
+
