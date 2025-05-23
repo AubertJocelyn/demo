@@ -8,11 +8,9 @@ import numpy as np
 import exifread
 import cv2
 
-#variable utiles notamment pour tri_date_mois(), decalage_utc()
-
 ## fonction pour les tris
 
-# Récupère les métadonnées EXIF d'une image
+
 
 # Tri par année à partir de la date EXIF
 def Annees(image_filename):
