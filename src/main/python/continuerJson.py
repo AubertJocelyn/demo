@@ -1,7 +1,7 @@
 import json 
 import os 
 import image
-import module_de_tri.tri_simple
+import module_de_tri.fonctionTri
 from PIL import Image
 import Erreur
 

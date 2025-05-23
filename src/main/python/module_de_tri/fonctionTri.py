@@ -1,60 +1,20 @@
 # librairie utiles
+import annexe as anx
 from PIL import Image
 from PIL.ExifTags import TAGS
 import numpy as np
 import exifread
+import cv2
 
 #variable utiles notamment pour tri_date_mois(), decalage_utc()
-mois=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]
-fuseau_horaire={
-    -12: "Etc/GMT+12",
-    -11: "Pacific:_Pago_Pago_Niue Midway",
-    -10: "Pacific:_Honolulu_TahitiRarotonga",
-    -9: "America:_Anchorage_Juneau_Gambier",
-    -8: "America:_Los_Angeles_Vancouver_Tijuana",
-    -7: "America:_Denver_Phoenix_Chihuahua",
-    -6: "America:_Chicago_Guatemala_Belize",
-    -5: "America:_New_York_Toronto_Bogota",
-    -4: "America:_Halifax_Caracas_Santiago",
-    -3: "America: Argentina Sao_Paulo Montevideo",
-    -2: "America:_Noronha_Atlantic:_South_Georgia",
-    -1: "Atlantic:_Azores_Cape_Verde",
-    0: "Europe:_London_Africa:_Abidjan_Atlantic:_Reykjavik",
-    1: "Europe:_Paris_Berlin_Africa:_Lagos",
-    2: "Europe: Athens Helsinki Africa: Cairo",
-    3: "Europe: Moscow Africa: Nairobi Asia: Riyadh",
-    4: "Asia: Dubai Baku Europe: Samara",
-    5: "Asia: Karachi Tashkent",
-    6: "Asia: Dhaka Almaty",
-    7: "Asia: Bangkok Jakarta Ho_Chi_Minh",
-    8: "Asia: Shanghai Singapore Australia: Perth",
-    9: "Asia: Tokyo Seoul Yakutsk",
-    10: "Australia: Sydney Pacific Port_Moresby Asia Vladivostok",
-    11: "Pacific: Guadalcanal Asia Srednekolymsk",
-    12: "Pacific: Auckland Fiji Asia Kamchatka",
-    13: "Pacific: Tongatapu Apia",
-    14: "Pacific: Kiritimati"
-}
+
 ## fonction pour les tris
 
 # Récupère les métadonnées EXIF d'une image
-def metadonnees(my_image):
-    L = {}
-    try:
-        img_exif_data = my_image.getexif()
-        for id in img_exif_data:
-            tag_name = TAGS.get(id, id)
-            data = img_exif_data.get(id)
-            if isinstance(data, bytes):
-                data = data.decode()
-            L[tag_name] = data
-    except Exception as e:
-        print(f"Erreur lors de l'ouverture de l'image {my_image} : {e}")
-    return L
 
 # Tri par année à partir de la date EXIF
 def tri_date_annee(image_filename):
-    date = metadonnees(image_filename).get('DateTime')
+    date = anx.metadonnees(image_filename).get('DateTime')
     if date:  #test si données existe dans EXIF
         return date.split(":")[0]
     return "Sans date"
@@ -62,8 +22,8 @@ def tri_date_annee(image_filename):
 #Tri par nom_appareil à partir des données EXIF
 def tri_appareil(nom):
     image = Image.open(nom)
-    mar = metadonnees(image).get('Make')
-    mol = metadonnees(image).get('Model')
+    mar = anx.metadonnees(image).get('Make')
+    mol = anx.metadonnees(image).get('Model')
     if mar:     #test si données existe dans EXIF
         if mol:  #test si données existe dans EXIF
             return (mar+ "_"+ mol)
@@ -72,15 +32,15 @@ def tri_appareil(nom):
 
 def tri_date_mois (nom):
     image = Image.open(nom)
-    date = metadonnees(image).get('DateTime')
+    date = anx.metadonnees(image).get('DateTime')
     if date:
-        return mois[date.split(":")[1]+1]
+        return anx.mois[date.split(":")[1]+1]
     return "Sans date"
 
 # Tri par heure à partir de la date EXIF
 def tri_heure (nom):
     image = Image.open(nom)
-    date = metadonnees(image).get('DateTime')
+    date = anx.metadonnees(image).get('DateTime')
     if date:
         return date.split(" ")[1]
 
@@ -89,7 +49,7 @@ def tri_heure (nom):
 # Tri par distinction jour/nuit, il regarde l'heure (jour compris entre 7h et 20h) à partir de la date EXIF
 def tri_jour_nuit (nom):
     image = Image.open(nom)
-    date = metadonnees(image).get('DateTime')
+    date = anx.metadonnees(image).get('DateTime')
     if date:
         heure= int(date.split(" ")[1].split(":")[0])
         if heure>20 or heure<7 :
@@ -124,25 +84,33 @@ def tri_couleur(nom):
 # le dictionnaire définit dans les variable fait le lien entre le fuseau horaire et la localisation
 def decalage_utc(nom):
     image = Image.open(nom)
-    date = metadonnees(image).get('DateTime')
+    date = anx.metadonnees(image).get('DateTime')
     if date:
-        utc=get_gps_info(nom)
+        utc=anx.get_gps_info(nom)
         if utc:
             heure= int(date.split(" ")[1].split(":")[0]) #comme donnees en "str", utilasation de split pour récuperer le nombre correspondant à l'heure il faudrait s'assuré que ces toujours la meme typologie
             heure_utc=int(utc.split("[")[1].split(",")[0])
             decalage = int(heure -heure_utc)
             if -13 < decalage < 15 :
-                    return fuseau_horaire.get(decalage)# utilisation du dictionnaire
+                    return anx.fuseau_horaire.get(decalage)# utilisation du dictionnaire
     return "Sans date"
 
-# ## fonction pour le tri par localisation (à finir)
-#attention problème avec le chemin de l'image
-# # Récupère les informations GPS
-def get_gps_info(image_filename):
-    with open(image_filename, 'rb') as f:
-         tags = exifread.process_file(f)
-    gps_info = {tag: tags[tag] for tag in tags.keys() if tag.startswith('GPS')}
-    return str(gps_info.get('GPS GPSTimeStamp'))
+def tri_presence_visage(image):
+    image = cv2.imread(image)
+    # on convertit l'image en noir et blanc
+    # l'algorithme que nous allons utilisé a besoin de ce pretraitement
+    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #https://github.com/opencv/opencv/tree/master/data/haarcascades
+    # on charge notre modèle
+    face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
+    # On cherche tous les visages disponibles dans l'image
+    faces = face_cascade.detectMultiScale(image_gray, 1.05, 5,minSize=(50, 50))
+    # on écrit dans la console le nombre de visages que  l'algorithme a détecté
+    print( len(faces))
+    if len(faces)>0:
+        return "avec"
+    return "sans"
+
 
 # ## fonction annexe (pas utile si tu veux uniquement les etiquettes pour une photo)
 
