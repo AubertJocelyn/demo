@@ -1,7 +1,7 @@
 import json 
 import os 
 import image
-import module_de_tri.tri_simple
+import module_de_tri.fonctionTri
 from PIL import Image
 import Erreur
 
@@ -39,7 +39,9 @@ def creationJsonAvecAlbum(nom,album):
     with open(path, "w") as f :
         json.dump(L,f,indent=2)
 
-    
+# les différents tris il y a dans tri_simple: tri_date_annee() ,  tri_appareil(), tri_date_mois(), tri_heure (), tri_jour_nuit () , tri_couleur(), decalage_utc().
+# dans tri_opencv: tri_presence_visage()
+# tous les tris prennent en entrée le chemin de l'image et return en "str"
 def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus faire de cd et faire belek aux différents albums
     #if nom_album not in files :
      #   raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
