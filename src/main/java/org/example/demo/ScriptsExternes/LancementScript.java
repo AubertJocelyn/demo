@@ -113,6 +113,11 @@ public class LancementScript {
         String y = "360";
         AfficherImages(largeur, hauteur, x, y, nomAlbum, nomsImages);
     }
+
+    public static void ExporterImages(String cheminDest, String nomAlbum, String[] nomsImages) {
+        String cheminScript =  getCheminScript( "bash", "CopierCheminSrcDossierDest.sh");
+        LancementScript.main("bash", cheminScript, cheminDest, getString(getCheminImage(nomAlbum, nomsImages)));
+    }
 }
 
 

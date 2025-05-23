@@ -18,12 +18,14 @@ import org.example.demo.ScriptsExternes.getTableauDes;
 
 import java.io.IOException;
 import java.time.format.TextStyle;
+import java.util.Arrays;
 
 
 public class InterfaceApp extends Application {
 
     String[] albums = getTableauDes.albums(); //liste des noms des albums existants
     String current_album = null;
+    Boolean isActionEnCours = Boolean.FALSE;
 
 
 
@@ -394,6 +396,4 @@ public class InterfaceApp extends Application {
         primaryStage.centerOnScreen();
 
     }
-
-
 }

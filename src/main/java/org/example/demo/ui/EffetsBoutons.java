@@ -3,6 +3,7 @@ package org.example.demo.ui;
 import org.example.demo.ScriptsExternes.LancementScript;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class EffetsBoutons {
     public static void CreerAlbum(String nomAlbum) {
@@ -13,14 +14,16 @@ public class EffetsBoutons {
 
     public static String AjouterPhotosAAlbum(String nomAlbum) {
         String dossierSource = LancementScript.LancementGestionnaireFichiers();
-        System.out.println(dossierSource);
         String dossierDestination = Paths.get(System.getProperty("user.dir"), "WorkingDirectory", nomAlbum, "images").toAbsolutePath().toString();
-        System.out.println("dossier destination");
-        System.out.println(dossierDestination);
         return LancementScript.CopieDossierSourc_Dest(dossierSource, dossierDestination);
     }
 
     public static void VisualiserImages(String nomAlbum, String[] nomImages) {
         LancementScript.AfficherImages(nomAlbum, nomImages);
+    }
+
+    public static void exporterImagesInDossier(String nomAlbum, String[] nomsImages) {
+        String dossierDestination = LancementScript.LancementGestionnaireFichiers();
+        LancementScript.ExporterImages(dossierDestination, nomAlbum, nomsImages);
     }
 }

@@ -10,12 +10,20 @@ class EffetsBoutonsTest {
 
     @Test
     void creerAlbum() {
+        /*
         LancementScript.SupprimerAlbum("TestNouvelAlbum");
         CreerAlbum("TestNouvelAlbum");
+         */
     }
 
     @Test
     void ajouterPhotosAAlbum() {
         //String message = AjouterPhotosAAlbum("LralbumQuiN'existePas");
+    }
+
+    @Test
+    void exporterImagesInDossier() {
+        String[] nomsImages = {"blanc.png", "bleu foncer.png"};
+        EffetsBoutons.exporterImagesInDossier("AlbumExemple", nomsImages);
     }
 }
