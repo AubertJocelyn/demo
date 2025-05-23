@@ -297,7 +297,7 @@ public class InterfaceApp extends Application {
 
 
         Quick_Button enregistrer = new Quick_Button("Enregistrer sous ...", Color.ORANGE,Color.WHITE);
-        enregistrer.setOnAction(e -> {System.out.println("Enregistrer");});
+
 
 
         HBox.setMargin(enregistrer,new Insets(5 ,5,5,5));
@@ -309,6 +309,7 @@ public class InterfaceApp extends Application {
 
         if (current_album != null) {
             String[] images = getTableauDes.images(current_album,categorie,tag);
+            enregistrer.setOnAction(e -> {EffetsBoutons.exporterImagesInDossier(current_album,images);});
             Quick_Button visu = new Quick_Button("Voir images", Color.ORANGE, Color.WHITE);
             visu.setOnAction(e -> {EffetsBoutons.VisualiserImages(current_album,images);});
             HBox.setMargin(visu,new Insets(5,5,5,5));
