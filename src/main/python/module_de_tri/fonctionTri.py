@@ -14,14 +14,14 @@ import cv2
 # Récupère les métadonnées EXIF d'une image
 
 # Tri par année à partir de la date EXIF
-def annees(image_filename):
+def Annees(image_filename):
     date = anx.metadonnees(image_filename).get('DateTime')
     if date:  #test si données existe dans EXIF
         return date.split(":")[0]
     return "Sans date"
 
 #Tri par nom_appareil à partir des données EXIF
-def appareil(nom):
+def Appareil(nom):
     image = Image.open(nom)
     mar = anx.metadonnees(image).get('Make')
     mol = anx.metadonnees(image).get('Model')
@@ -31,14 +31,14 @@ def appareil(nom):
         return mar
     return "Sans modele"
 
-def mois (nom):
+def Mois (nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
         return anx.mois[date.split(":")[1]+1]
     return "Sans date"
 
-def jour (nom):
+def Jour (nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
@@ -46,7 +46,7 @@ def jour (nom):
     return "Sans date"
 
 # Tri par heure à partir de la date EXIF
-def heure (nom):
+def Heure (nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
@@ -55,7 +55,7 @@ def heure (nom):
     return "Sans date"
 
 # Tri par distinction jour/nuit, il regarde l'heure (jour compris entre 7h et 20h) à partir de la date EXIF
-def jour_nuit (nom):
+def Jour_nuit (nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
@@ -68,7 +68,7 @@ def jour_nuit (nom):
 
 
 # Tri par couleur (R=0, B=1, V=2) somme tous les pixel et fais la moyenne renvoit toute ces couleurs: rouge vert bleu blanc jaune noir cyan magenta
-def couleur(nom):
+def Couleur(nom):
     image = Image.open(nom)
     a = np.sum(np.array(image), axis=(0, 1))  # Somme par canal R, G, B
     a=[int(i/(len(np.array(image))*len(np.array(image)[0]))) for i in a] #moyenne
@@ -90,7 +90,7 @@ def couleur(nom):
 
 # Tri par localisation à partir de la date utc: compare, l'heure local et utc pour definir le fuseau horaire corespondant, prend uniquement les décalages entier ignore les demis comme pour l'inde.
 # le dictionnaire définit dans les variable fait le lien entre le fuseau horaire et la localisation
-def localisation(nom):
+def Localisation(nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
@@ -103,7 +103,7 @@ def localisation(nom):
                     return anx.fuseau_horaire.get(decalage)# utilisation du dictionnaire
     return "Sans date"
 
-def presence_visage(fil):
+def Presence_visage(fil):
     image=Image.open(fil)
     # on convertit l'image en noir et blanc
     # l'algorithme que nous allons utilisé a besoin de ce pretraitement

@@ -1,7 +1,8 @@
-Couleurs Rouge Vert Bleu Blanc Jaune Noir Cyan Magenta
-Mois Janvier Février Mars Avril Mai Juin Juillet Août Septembre Octobre Novembre Décembre
-Années
+Couleurs rouge vert bleu blanc jaune noir cyan magenta
+Mois janvier février mars avril mai juin juillet août septembre octobre novembre décembre
+Annees
 Localisation(decalage_utc) Etc/GMT+12 Pacific:_Pago_Pago_Niue Midway Pacific:_Honolulu_TahitiRarotonga America:_Anchorage_Juneau_Gambier America:_Los_Angeles_Vancouver_Tijuana America:_Denver_Phoenix_Chihuahua America:_Chicago_Guatemala_Belize America:_New_York_Toronto_Bogota America:_Halifax_Caracas_Santiago
-Jours 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-Jour/Nuit Nuit Jour
-Visage Avec Sans
+Jour 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+Jour_nuit nuit jour
+Presence_visage avec sans
+Heure 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
