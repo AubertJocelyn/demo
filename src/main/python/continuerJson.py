@@ -1,10 +1,13 @@
 import json 
 import os 
 import image
-import module_de_tri.fonctionTri
+import module_de_tri
 from PIL import Image
 import Erreur
+import sys 
+import inspect
 
+import module_de_tri.fonctionTri
 
 def verifJson(path):
     try:
@@ -21,7 +24,6 @@ def verifJson(path):
 
 def verif_possible_ecrire(path):
     try :
-        print("balise", path)
         with open(path,'w') as f:
             f.write("")
             return True
@@ -42,37 +44,42 @@ def creationJsonAvecAlbum(nom,album):
 # les différents tris il y a dans tri_simple: tri_date_annee() ,  tri_appareil(), tri_date_mois(), tri_heure (), tri_jour_nuit () , tri_couleur(), decalage_utc().
 # dans tri_opencv: tri_presence_visage()
 # tous les tris prennent en entrée le chemin de l'image et return en "str"
-def continuer(img_path,Dico_etiquette,nom_album):#Changer fonction pour ne plus faire de cd et faire belek aux différents albums
-    #if nom_album not in files :
-     #   raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
+def continuer(nom_album):
+
     demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
-    print("deom_directory", demo_directory)
+    albums = os.listdir(os.path.join(demo_directory,"WorkingDirectory"))
+
+    if nom_album not in albums :
+        raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
+    
+    chemin_album = os.path.join(demo_directory,"WorkingDirectory",nom_album)
     chemin = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images")
     chemin_json = os.path.join(demo_directory, "WorkingDirectory", nom_album, "data.json")
-    #print("balise", chemin)
     chemin_temp = os.path.join(demo_directory,"WorkingDirectory",nom_album,"data_temp.json")
-    if not VerifSiJsonExist(chemin) :
+
+    if not os.path.exists(chemin_json) :
         creationJsonAvecAlbum("data.json",nom_album)
-    if image.VerifQueDesIMG(os.path.join(chemin,'images')) :
+
+    if image.VerifQueDesIMG(chemin) :
+        
         files = os.listdir(chemin)
         creationJsonAvecAlbum("data_temp",nom_album)
         verif_possible_ecrire(chemin_temp)
-        with open(chemin_json,"r") as f :
-            data = json.load(f)
+        data = json_in_dico(chemin_json)
         for img in files:   
-            clef = hash(img)
+            clef_img = hash(img)
             D_img={"nom" : img}
             D_img["album"]=nom_album
             chemin_image = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images",img)
-            for catégorie in Dico_etiquette.keys():
-                D_img[catégorie] = module_de_tri.tri_simple.tri_couleur(chemin_image) ##fonction de tri pour associer la valeur, j'ai modifier Image.open(chemin_image) par chemin_image car je le fais et certain trie l'ouvre différemment
-            data[clef] = D_img
-        with open(chemin_temp,"w") as f:
-            json.dump(data,f)
+            applique_tout_tri(chemin_image,D_img)
+            data[clef_img] = D_img
+        dico_in_json(chemin_temp,data)
+        
         if verifJson(chemin_temp):
             os.remove(chemin_json)
             os.rename(chemin_temp,chemin_json)
         return True 
+    
     return False
 
 def json_in_dico(fic_json):
@@ -82,16 +89,8 @@ def json_in_dico(fic_json):
 
 def dico_in_json(fic_json,dico):
     with open(fic_json,'w') as f:
-        json.dump(dico,f)
-    pass 
+        json.dump(dico,f) 
         
-    
-
-def VerifSiJsonExist(path_directory):   
-    files = os.listdir(path_directory)
-    if  "data.json" in files :
-        return True
-    return False
 
 
 def renvoie_photo(catégorie,etiquette,nom_album):
@@ -107,6 +106,42 @@ def renvoie_photo(catégorie,etiquette,nom_album):
             Img_Correct.append(data[i]["nom"])
     return Img_Correct
 
-D = { "Couleurs" : ["r","g","b"] }
 
-continuer(os.path.join(os.getcwd(), "WorkingDirectory"),D,"TestNouvelAlbum")
+
+def get_etiquettes():
+    D={}
+    demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+    path_txt = os.path.join(demo_directory,"ListeCategoriesEtEtiquettes.txt")
+    fic = open(path_txt,"r")
+    mots = []
+    for ligne in fic:
+        mots.append(ligne.split())
+    for i in mots :
+        D[i[0]]=[]
+        for j in range (1,len(i)):
+            D[i[0]].append(i[j])
+    return D
+
+def applique_tout_tri(chemin_img,Dico_img):
+    
+    fonctions_tri = {
+        nom: fonction
+        for nom, fonction in inspect.getmembers(module_de_tri.fonctionTri, inspect.isfunction)
+    }
+    
+    for nom_fonction, fonction in fonctions_tri.items():
+        try:
+            valeur = fonction(chemin_img)
+            Dico_img[nom_fonction] = valeur
+        except Exception as e:
+            print(f"[ERREUR] {nom_fonction} a échoué sur {chemin_img} : {e}")
+    
+    return Dico_img
+
+
+argument1 = sys.argv[1]
+
+def main():
+    continuer(argument1)
+
+main()
