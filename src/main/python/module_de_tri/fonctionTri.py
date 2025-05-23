@@ -1,6 +1,7 @@
 # librairie utiles
 import os
-import annexe as anx
+from . import annexe anx
+#import annexe as anx
 from PIL import Image
 from PIL.ExifTags import TAGS
 import numpy as np
@@ -111,7 +112,7 @@ def Presence_visage(fil):
     #https://github.com/opencv/opencv/tree/master/data/haarcascades
     # on charge notre modèle
     demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
-    base_path = os.path.join("main", "python", "module_de_tri")
+    base_path = os.path.join("src","main", "python", "module_de_tri")
     cascade_file = os.path.join(demo_directory,base_path, "haarcascade_frontalface_alt.xml")
     face_cascade = cv2.CascadeClassifier(cascade_file)
     # On cherche tous les visages disponibles dans l'image
@@ -121,7 +122,7 @@ def Presence_visage(fil):
         return "avec"
     return "sans"
 
-
+print(Presence_visage("C:\\Users\\Vincent\\IdeaProjects\\demo\\WorkingDirectory\\AlbumExemple\\images\\blanc.png"))
 # ## fonction annexe (pas utile si tu veux uniquement les etiquettes pour une photo)
 
 # def tri_total2(i,image):
