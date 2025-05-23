@@ -353,6 +353,7 @@ public class InterfaceApp extends Application {
     }
 
     private void aide(){
+        //affiche un texte d'aide
         Stage window = new Stage();
         Quick_VBox root = new Quick_VBox(500,100,Color.LIGHTGRAY);
         Text text1 = new Text("Pour commencer, choisissez ou créez un album.");
