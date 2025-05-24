@@ -25,7 +25,7 @@ public class InterfaceApp extends Application {
 
     String[] albums = getTableauDes.albums(); //liste des noms des albums existants
     String current_album = null;
-    Boolean isActionEnCours = Boolean.FALSE;
+
 
 
 
@@ -73,8 +73,7 @@ public class InterfaceApp extends Application {
         //bouton du choix du tri
         MenuButton menu = new MenuButton("Trier par : ");
 
-        //création bouton enregistrer tout
-        Quick_Button enregistrer_tout = new Quick_Button("Enregistrer tout", Color.LIGHTGRAY, Color.WHITE);
+
 
 
 
@@ -85,9 +84,6 @@ public class InterfaceApp extends Application {
             MenuItem item = new MenuItem(categories[i]);
             menu.getItems().add(item);
             item.setOnAction(e -> {
-                if (current_album != null) {
-                    enregistrer_tout.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
-                }
                 try {
                     pane.setCenter(null);
                     pane.setCenter(show_all(categories[j]));
@@ -108,17 +104,12 @@ public class InterfaceApp extends Application {
 
 
 
-        enregistrer_tout.setOnAction(e -> {
-            if (current_album != null) {
-                System.out.println("Enregistrer tout");
-            }
 
-        });
 
 
         HBox btns = new HBox();
         btns.setSpacing(10);
-        btns.getChildren().addAll(menu,enregistrer_tout);
+        btns.getChildren().addAll(menu);
         pane.setTop(btns);
 
         BorderPane.setMargin(btns,new Insets(5,5,5,5));
