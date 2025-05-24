@@ -9,6 +9,9 @@ from continuerJson import (
 )
 import Erreur
 
+
+#Pour faire les tests, mettre en commentaire le dernier bloc de code du fichier continuerJson.py
+
 # --- verifJson ---
 def test_verifJson_valide(tmp_path):
     path = tmp_path / "valide.json"
