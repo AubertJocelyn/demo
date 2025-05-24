@@ -102,6 +102,7 @@ def Localisation(nom):
                     return anx.fuseau_horaire.get(decalage)# utilisation du dictionnaire
     return "Sans date"
 
+
 # tri pour repérer la présense de visage une parti récupére en meme temps que le programme "haarcascade_frontalface_alt.xml"
 def Presence_visage(fil):
     image=Image.open(fil)
@@ -110,7 +111,8 @@ def Presence_visage(fil):
     image_gray = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2GRAY)
     #https://github.com/opencv/opencv/tree/master/data/haarcascades
     # on charge notre modèle
-    demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+    """demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))"""
+    demo_directory = os.getcwd()
     base_path = os.path.join("src","main", "python", "module_de_tri")
     cascade_file = os.path.join(demo_directory,base_path, "haarcascade_frontalface_alt.xml")
     face_cascade = cv2.CascadeClassifier(cascade_file)

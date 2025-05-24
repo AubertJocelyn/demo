@@ -10,7 +10,7 @@ import hashlib
 from Erreur import albumdoesnotexist
 import module_de_tri.fonctionTri
 
-def verifJson(path): #Fonction qui permet de lever une exception si le json qu'on essaie de lire est corrompu
+def verifJson(path):
     try:
         with open(path,"r") as f:
             json.load(f)
@@ -23,7 +23,7 @@ def verifJson(path): #Fonction qui permet de lever une exception si le json qu'o
         return False
 
 
-def verif_possible_ecrire(path): # Fonction de test qui permet de savoir si on a les droits d'écriture (qui a servi a régler des problèmes au début du projet)
+def verif_possible_ecrire(path):
     try :
         with open(path,'w') as f:
             f.write("")
@@ -48,39 +48,30 @@ def creationJsonAvecAlbum(nom,album,base_dir=None): #Fonction qui permet de cré
 
 
 def continuer(nom_album): #Fonction qui permet d'écrire dans le fichier json d'un album apprès l'ajout de nouvelles photos, ou après création 
-    print(1)
     #On récupère la liste des album existant et le chemin du projet
     demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+
     albums = os.listdir(os.path.join(demo_directory,"WorkingDirectory"))
 
-    #On lève une exception si l'album n'existe pas
     if nom_album not in albums :
         raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
     
-    #On récupère/créé tout les chemins dont on va avoir besoin 
     chemin_album = os.path.join(demo_directory,"WorkingDirectory",nom_album)
     chemin = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images")
     chemin_json = os.path.join(demo_directory, "WorkingDirectory", nom_album, "data.json")
     chemin_temp = os.path.join(demo_directory,"WorkingDirectory",nom_album,"data_temp.json")
 
-    #On vérifie si le Json existe, s'il n"existe pas on le créé
     if not os.path.exists(chemin_json) :
         creationJsonAvecAlbum("data.json",nom_album)
 
-    #On vérifie ensuite si le fichier image ne contient que des images
     if image.VerifQueDesIMG(chemin) :
         
-        #On vérifie si on peut écrire dans le json 
         files = os.listdir(chemin)
         creationJsonAvecAlbum("data_temp",nom_album)
         verif_possible_ecrire(chemin_temp)
         data = json_in_dico(chemin_json)
-
-        #On parcourt toutes les images présentes dans le fichier
         for img in files:   
             clef_img = hashlib.sha256(img.encode()).hexdigest()
-            
-            #On génère le dictionnaire de chaque image, pour le ranger dans le dictionnaire associer a l'album, qu'on écrit dans un json temporaire 
             if not is_img_in_Dico(data,clef_img):
                 D_img={"nom" : img}
                 D_img["album"]=nom_album
@@ -89,7 +80,6 @@ def continuer(nom_album): #Fonction qui permet d'écrire dans le fichier json d'
                 data[clef_img] = D_img
         dico_in_json(chemin_temp,data)
         
-        #Si le json est valide, on suprrime l'ancien et on le remplace par le temporaire
         if verifJson(chemin_temp):
             os.remove(chemin_json)
             os.rename(chemin_temp,chemin_json)
@@ -97,18 +87,18 @@ def continuer(nom_album): #Fonction qui permet d'écrire dans le fichier json d'
     
     return False
 
-def json_in_dico(fic_json): #Fonction qui permet renvoie un dictionnaire contenant le fihcier JSON
+def json_in_dico(fic_json):
     with open(fic_json,"r") as f:
             data =json.load(f)
     return data
 
-def dico_in_json(fic_json,dico):#Fonction qqui permet d'écrire un dictionnaire dans un json
+def dico_in_json(fic_json,dico):
     with open(fic_json,'w') as f:
         json.dump(dico,f) 
         
 
 
-def renvoie_photo(catégorie,etiquette,nom_album): #Fonction qui permet de renvoyer les images qui ont une catégorie en particulier
+def renvoie_photo(catégorie,etiquette,nom_album):
     files = os.getcwd()
     if nom_album not in files :
         raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas ")
@@ -123,9 +113,10 @@ def renvoie_photo(catégorie,etiquette,nom_album): #Fonction qui permet de renvo
 
 
 
-def get_etiquettes():#Fonction qui permet d'obtenir la liste des étiquettes depuis le txt qui les contients
+def get_etiquettes():
     D={}
-    demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+    """demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))"""
+    demo_directory = os.getcwd()
     path_txt = os.path.join(demo_directory,"ListeCategoriesEtEtiquettes.txt")
     fic = open(path_txt,"r")
     mots = []
@@ -137,7 +128,7 @@ def get_etiquettes():#Fonction qui permet d'obtenir la liste des étiquettes dep
             D[i[0]].append(i[j])
     return D
 
-def applique_tout_tri(chemin_img,Dico_img): #Fonction qui permet d'appliquer tout les tris sur une image et de compléter le dictionnaire qui lui est associé
+def applique_tout_tri(chemin_img,Dico_img):
     
     fonctions_tri = {
         nom: fonction
@@ -153,17 +144,20 @@ def applique_tout_tri(chemin_img,Dico_img): #Fonction qui permet d'appliquer tou
     
     return Dico_img
 
-def is_img_in_Dico(Dico,clef_img): #Fonction permettant de savoir si une image est déja dans un dictionnaire
+def is_img_in_Dico(Dico,clef_img):
     return clef_img in Dico.keys()
+
 
 
 ##Bloc de code permettant l'utilisation du code avec un argument 
 
-#argument1 = sys.argv[1]
+argument1 = sys.argv[1]
 
-#def main():
+
+
+def main():
     continuer(argument1)
 
-#main()
+main()
 
 

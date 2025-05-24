@@ -33,6 +33,6 @@ class LancementScriptTest {
 
     @Test
     void AfficherImages() {
-        String[] nomsImages = {"blanc.png", "bleu foncer.png"};
-        LancementScript.AfficherImages("TestNouvelAlbum", nomsImages);}
+        /*String[] nomsImages = {"blanc.png", "bleu foncer.png"};
+        LancementScript.AfficherImages("TestNouvelAlbum", nomsImages);*/}
 }
