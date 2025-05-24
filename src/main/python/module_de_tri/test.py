@@ -1,6 +1,6 @@
 import fonctionTri as fT
 import os
-demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+""""""demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))""""""
 print(demo_directory )
 chemin_image = os.path.join(demo_directory,"WorkingDirectory","AlbumExemple","images")
 blanc=os.path.join(chemin_image,"blanc.png")

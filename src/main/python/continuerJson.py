@@ -33,18 +33,21 @@ def verif_possible_ecrire(path):
 
 def creationJsonAvecAlbum(nom,album): 
     L = {}
+    """demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))"""
+    demo_directory = os.getcwd()
     file = nom 
-    files = os.listdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))),"WorkingDirectory"))
+    files = os.listdir(os.path.join(demo_directory,"WorkingDirectory"))
     if album not in files :
         raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
-    path = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))),"WorkingDirectory"),album, file)
+    path = os.path.join(os.path.join(demo_directory,"WorkingDirectory"),album, file)
     with open(path, "w") as f :
         json.dump(L,f,indent=2)
 
 
 def continuer(nom_album):
 
-    demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+    """demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))"""
+    demo_directory = os.getcwd()
     albums = os.listdir(os.path.join(demo_directory,"WorkingDirectory"))
 
     if nom_album not in albums :
@@ -109,7 +112,8 @@ def renvoie_photo(catégorie,etiquette,nom_album):
 
 def get_etiquettes():
     D={}
-    demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+    """demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))"""
+    demo_directory = os.getcwd()
     path_txt = os.path.join(demo_directory,"ListeCategoriesEtEtiquettes.txt")
     fic = open(path_txt,"r")
     mots = []
