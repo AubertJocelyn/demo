@@ -67,10 +67,12 @@ def continuer(nom_album): #Fonction qui permet d'écrire dans le fichier json d'
 
     if image.VerifQueDesIMG(chemin) :
         
-        files = os.listdir(chemin)
         creationJsonAvecAlbum("data_temp",nom_album)
         verif_possible_ecrire(chemin_temp)
         data = json_in_dico(chemin_json)
+
+        files = os.listdir(chemin)
+        
         for img in files:   
             clef_img = hashlib.sha256(img.encode()).hexdigest()
             if not is_img_in_Dico(data,clef_img):
@@ -100,8 +102,11 @@ def dico_in_json(fic_json,dico):
 
 
 def renvoie_photo(catégorie,etiquette,nom_album):
-    files = os.getcwd()
-    if nom_album not in files :
+
+    demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+    albums = os.listdir(os.path.join(demo_directory,"WorkingDirectory"))
+
+    if nom_album not in albums :
         raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas ")
     data = {}
     Img_Correct = []

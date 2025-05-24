@@ -3,7 +3,7 @@ import json
 import tempfile
 import pytest
 from unittest import mock
-from continuerJson import (
+from src.main.python.TriViaEditionJson import (
     verifJson, verif_possible_ecrire, creationJsonAvecAlbum, json_in_dico,
     dico_in_json, is_img_in_Dico
 )
