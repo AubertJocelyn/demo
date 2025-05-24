@@ -66,11 +66,12 @@ def continuer(nom_album):
         data = json_in_dico(chemin_json)
         for img in files:   
             clef_img = hash(img)
-            D_img={"nom" : img}
-            D_img["album"]=nom_album
-            chemin_image = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images",img)
-            applique_tout_tri(chemin_image,D_img)
-            data[clef_img] = D_img
+            if not is_img_in_Dico(data,clef_img):
+                D_img={"nom" : img}
+                D_img["album"]=nom_album
+                chemin_image = os.path.join(demo_directory,"WorkingDirectory",nom_album,"images",img)
+                applique_tout_tri(chemin_image,D_img)
+                data[clef_img] = D_img
         dico_in_json(chemin_temp,data)
         
         if verifJson(chemin_temp):
@@ -136,6 +137,8 @@ def applique_tout_tri(chemin_img,Dico_img):
     
     return Dico_img
 
+def is_img_in_Dico(Dico,clef_img):
+    return clef_img in Dico.keys()
 
 argument1 = sys.argv[1]
 
