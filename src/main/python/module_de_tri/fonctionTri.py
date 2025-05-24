@@ -1,7 +1,7 @@
 # librairie utiles
 import os
-from . import annexe anx
-#import annexe as anx
+#from . import annexe anx
+import annexe as anx
 from PIL import Image
 from PIL.ExifTags import TAGS
 import numpy as np
@@ -13,10 +13,11 @@ import cv2
 
 
 # Tri par année à partir de la date EXIF
-def Annees(image_filename):
-    date = anx.metadonnees(image_filename).get('DateTime')
+def Annees(nom):
+    image = Image.open(nom)
+    date = anx.metadonnees(image).get('DateTime')# metadonnees() retour les metadonnees dans un dictoinaire, on recupére la date avec la Clé "DateTime"
     if date:  #test si données existe dans EXIF
-        return date.split(":")[0]
+        return date.split(":")[0]  #c'est une chaine de caratéres annee:mois:jour heure
     return "Sans date"
 
 #Tri par nom_appareil à partir des données EXIF
@@ -34,14 +35,14 @@ def Mois (nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
-        return anx.mois[date.split(":")[1]+1]
+        return anx.mois[int(date.split(":")[1])+1] #donne le mois en lettre donc une liste(d'ou le plus 1) dans annexe lie les deux
     return "Sans date"
 
 def Jour (nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
-        return date.split(":")[2]
+        return date.split(":")[2].split(" ")[0]
     return "Sans date"
 
 # Tri par heure à partir de la date EXIF
@@ -88,12 +89,11 @@ def Couleur(nom):
     return("noir")
 
 # Tri par localisation à partir de la date utc: compare, l'heure local et utc pour definir le fuseau horaire corespondant, prend uniquement les décalages entier ignore les demis comme pour l'inde.
-# le dictionnaire définit dans les variable fait le lien entre le fuseau horaire et la localisation
 def Localisation(nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
-        utc=anx.get_gps_info(nom)
+        utc=anx.get_gps_info(nom) #recupere l'heure utc
         if utc:
             heure= int(date.split(" ")[1].split(":")[0]) #comme donnees en "str", utilasation de split pour récuperer le nombre correspondant à l'heure il faudrait s'assuré que ces toujours la meme typologie
             heure_utc=int(utc.split("[")[1].split(",")[0])
@@ -102,6 +102,7 @@ def Localisation(nom):
                     return anx.fuseau_horaire.get(decalage)# utilisation du dictionnaire
     return "Sans date"
 
+# tri pour repérer la présense de visage une parti récupére en meme temps que le programme "haarcascade_frontalface_alt.xml"
 def Presence_visage(fil):
     image=Image.open(fil)
     # on convertit l'image en noir et blanc
@@ -120,7 +121,7 @@ def Presence_visage(fil):
         return "avec"
     return "sans"
 
-print(Presence_visage("C:\\Users\\Vincent\\IdeaProjects\\demo\\WorkingDirectory\\AlbumExemple\\images\\blanc.png"))
+
 # ## fonction annexe (pas utile si tu veux uniquement les etiquettes pour une photo)
 
 # def tri_total2(i,image):
