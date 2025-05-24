@@ -68,7 +68,7 @@ def Jour_nuit (nom):
 
 
 # Tri par couleur (R=0, B=1, V=2) somme tous les pixel et fais la moyenne renvoit toute ces couleurs: rouge vert bleu blanc jaune noir cyan magenta
-def Couleur(nom):
+def Couleurs(nom):
     image = Image.open(nom)
     a = np.sum(np.array(image), axis=(0, 1))  # Somme par canal R, G, B
     a=[int(i/(len(np.array(image))*len(np.array(image)[0]))) for i in a] #moyenne
