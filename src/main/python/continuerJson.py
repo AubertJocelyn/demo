@@ -7,7 +7,7 @@ import Erreur
 import sys 
 import inspect
 import hashlib
-
+from Erreur import albumdoesnotexist
 import module_de_tri.fonctionTri
 
 def verifJson(path): #Fonction qui permet de lever une exception si le json qu'on essaie de lire est corrompu
@@ -32,19 +32,23 @@ def verif_possible_ecrire(path): # Fonction de test qui permet de savoir si on a
         print("Aucun droit d'écriture sur le fichier")
         return False
 
-def creationJsonAvecAlbum(nom,album): #Fonction qui permet de créer un fichier Json vide dans un album précis
-    L = {}
-    file = nom 
-    files = os.listdir(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))),"WorkingDirectory"))
-    if album not in files :
-        raise  Erreur.albumdoesnotexist("L'album choisi n'existe pas")
-    path = os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))),"WorkingDirectory"),album, file)
-    with open(path, "w") as f :
-        json.dump(L,f,indent=2)
+def creationJsonAvecAlbum(nom,album,base_dir=None): #Fonction qui permet de créer un fichier Json vide dans un album précis
+
+    base_dir = base_dir or os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
+    working_dir = os.path.join(base_dir, "WorkingDirectory")
+    albums = os.listdir(working_dir)
+
+    if album not in albums:
+        raise albumdoesnotexist("L'album choisi n'existe pas")
+
+    path = os.path.join(working_dir, album, nom)
+    with open(path, "w") as f:
+        json.dump({}, f, indent=2)
+
 
 
 def continuer(nom_album): #Fonction qui permet d'écrire dans le fichier json d'un album apprès l'ajout de nouvelles photos, ou après création 
-    
+    print(1)
     #On récupère la liste des album existant et le chemin du projet
     demo_directory = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd())))
     albums = os.listdir(os.path.join(demo_directory,"WorkingDirectory"))
@@ -155,11 +159,11 @@ def is_img_in_Dico(Dico,clef_img): #Fonction permettant de savoir si une image e
 
 ##Bloc de code permettant l'utilisation du code avec un argument 
 
-argument1 = sys.argv[1]
+#argument1 = sys.argv[1]
 
-def main():
+#def main():
     continuer(argument1)
 
-main()
+#main()
 
 
