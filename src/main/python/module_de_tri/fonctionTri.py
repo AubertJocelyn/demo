@@ -50,7 +50,7 @@ def Heure (nom):
     image = Image.open(nom)
     date = anx.metadonnees(image).get('DateTime')
     if date:
-        return date.split(" ")[1]
+        return date.split(" ")[1].split(":")[0]
 
     return "Sans date"
 
